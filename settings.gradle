@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "ORing_WM_UI_Test"
