@@ -37,20 +37,40 @@ object ParseUtil {
 
     }
 
-    fun parseTerminalBlockTestLog(targetName: String, extentTest: ExtentTest){
+    fun parseDashboardTestLog(targetName: String, extentTest: ExtentTest){
 
         val node = extentTest.createNode(targetName)
         parseLogName{
             when (it.logName) {
-                LogName.SP_SW,
-                LogName.EEWW,
-                LogName.DashboardTest,
-                LogName.AI_value,
-                LogName.AI_raw,
-                LogName.RTD_mode,
-                LogName.finish -> {
+
+                LogName.Dashboard-> {
                     node.log(Status.INFO, it.totalMessage)
                 }
+            }
+        }
+
+    }
+
+    fun parseDashboardIOTestLog(targetName: String, extentTest: ExtentTest){
+
+        val node = extentTest.createNode(targetName)
+        parseLogName{
+            when (it.logName) {
+                LogName.dashboardIO -> {
+                    node.log(Status.INFO, it.totalMessage)
+                }
+            }
+        }
+
+    }
+
+    fun parseDeviceInfoTestLog(targetName: String, extentTest: ExtentTest){
+
+        val node = extentTest.createNode(targetName)
+        parseLogName{
+            if (it.logName != null && it.logName!!.contains(LogName.DeviceInfo)) {
+                node.log(Status.INFO, it.totalMessage)
+
             }
         }
 
@@ -85,6 +105,20 @@ object ParseUtil {
                     node.log(Status.INFO, it.totalMessage)
                 }
             }
+        }
+
+    }
+
+
+    fun parseNetworkStatusTestLog(targetName: String, extentTest: ExtentTest){
+
+        val node = extentTest.createNode(targetName)
+        parseLogName{
+
+            if (it.logName != null && it.logName!!.contains(LogName.NetworkStatusTest)) {
+                node.log(Status.INFO, it.logName + ":" + it.message)
+            }
+
         }
 
     }
@@ -136,7 +170,8 @@ object ParseUtil {
         val UiThreadStatement: ExtentTest = extentTest.createNode(LogName.UiThreadStatement)
         val AI_value: ExtentTest = extentTest.createNode(LogName.AI_value)
         val AI_raw: ExtentTest = extentTest.createNode(LogName.AI_raw)
-        val DashboardTest: ExtentTest = extentTest.createNode(LogName.DashboardTest)
+        val DashboardTest: ExtentTest = extentTest.createNode(LogName.Dashboard)
+        val DeviceInfo: ExtentTest = extentTest.createNode(LogName.DeviceInfo)
         val RTD_mode: ExtentTest = extentTest.createNode(LogName.RTD_mode)
         val finish: ExtentTest = extentTest.createNode(LogName.finish)
         val TouchFlickNoti: ExtentTest = extentTest.createNode(LogName.TouchFlickNoti)
@@ -166,10 +201,22 @@ object ParseUtil {
         val w: ExtentTest = extentTest.createNode(LogName.w)
         val wd: ExtentTest = extentTest.createNode(LogName.wd)
         val write: ExtentTest = extentTest.createNode(LogName.write)
+        val networkStatusTest: ExtentTest = extentTest.createNode(LogName.NetworkStatusTest)
 
         listLog.forEach {
             println(Gson().toJson(it))
+
+
+            if (it.logName!!.contains("CloudSetting")) {
+                CloudSetting.log(Status.INFO, it.logName + ":" + it.message)
+            }
+
+            if (it.logName!!.contains(LogName.NetworkStatusTest)) {
+                networkStatusTest.log(Status.INFO, it.logName + ":" + it.message)
+            }
+
             when (it.logName) {
+
                 LogName.DSQN->{
 
                     DSQN.log(Status.INFO,it.message)
@@ -306,9 +353,13 @@ object ParseUtil {
                 LogName.AI_raw->{
                     AI_raw.log(Status.INFO,it.message)
                 }
-                LogName.DashboardTest->{
+                LogName.Dashboard->{
                     DashboardTest.log(Status.INFO,it.message)
                 }
+                LogName.DeviceInfo->{
+                    DeviceInfo.log(Status.INFO,it.message)
+                }
+
                 LogName.RTD_mode->{
                     RTD_mode.log(Status.INFO,it.message)
                 }
@@ -393,12 +444,6 @@ object ParseUtil {
                 LogName.write->{
                     write.log(Status.INFO,it.message)
                 }
-                else ->{
-                    if (it.logName!!.contains("CloudSetting")) {
-                        CloudSetting.log(Status.INFO, it.logName + ":" + it.message)
-                    }
-                }
-
             }
         }
 

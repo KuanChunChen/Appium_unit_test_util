@@ -2,6 +2,7 @@ package com.oring.oring_wm_ui_test.apkTest
 
 import com.aventstack.extentreports.ExtentTest
 import com.aventstack.extentreports.MediaEntityBuilder
+import com.aventstack.extentreports.Status
 import io.appium.java_client.MobileBy
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
@@ -46,6 +47,17 @@ fun ExtentTest.screenshotInfo(driver: AndroidDriver<MobileElement>?, fileName: S
 
 fun WebDriverWait.untilViewLoad(viewID: String): WebElement {
     return this.until(ExpectedConditions.presenceOfElementLocated(MobileBy.id(viewID)))
+
+}
+
+fun WebDriverWait.untilViewLoad(viewID: String, extentTest: ExtentTest) {
+
+    try {
+        this.until(ExpectedConditions.presenceOfElementLocated(MobileBy.id(viewID)))
+    } catch (e: Exception) {
+        extentTest.log(Status.FAIL, "Some error happened, cause ： ${e.message}")
+    }
+
 
 }
 fun WebDriverWait.waitForVisibleByID(driver: AndroidDriver<MobileElement>?,by: By?, waitTime: Int) {

@@ -6,6 +6,8 @@ object Target {
         const val SHENGDA_PUMP_APK = "shengdapump.apk"
         const val ORING_LIGHT_APK = "ORing_Light Record_2.5.3.apk"
         const val ORING_WM_APK = "app-wm.apk"
+        const val ORING_WM_0520_APK = "wmapp0520.apk"
+
 
     }
 
