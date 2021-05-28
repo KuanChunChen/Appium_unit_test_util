@@ -12,7 +12,6 @@ import com.oring.oring_wm_ui_test.apkTest.model.TerminalBlockMember
 import com.oring.oring_wm_ui_test.apkTest.util.DateUtil
 import io.appium.java_client.MobileBy
 import io.appium.java_client.MobileElement
-import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.android.nativekey.AndroidKey
 import io.appium.java_client.android.nativekey.KeyEvent
 import org.junit.Test
@@ -25,27 +24,46 @@ import org.openqa.selenium.support.ui.WebDriverWait
 class WMReportTest: BaseExtentReportTest() {
 
     private val targetPackageName = Target.PackageName.ORING_WM_PACKAGE
+    private val targetBLEDevice = Target.BLEDeviceName.InitTest
 
 
     override var capabilities: DesiredCapabilities? = addAndroidCapability()
 
     private fun addAndroidCapability()= ProjectCapabilities.androidBaseCapabilities().apply {
-        addApkPath(Target.ApkName.ORING_WM_0520_APK)
         addPlatformVersion(Target.AndroidVersion.Android10)
         addDeviceName(Target.DeviceName.K52)
         addPlatformName(Target.Platform.Android)
         addPackage(targetPackageName)
-//        addAppActivity("com.oring.LoginActivity")
+        addAppActivity("com.oring.LoginActivity")
     }
-    private fun addIosCapability()=ProjectCapabilities.iosBaseCapabilities().apply {
-        addPlatformVersion(Target.IosVersion.Ios14_5)
+    private fun addIosCapability() = ProjectCapabilities.iosBaseCapabilities().apply {
+        addPlatformVersion(Target.IosVersion.Ios12_0)
         addPlatformName(Target.Platform.IOS)
-        addDeviceName(Target.DeviceName.Iphone12)
-        addUdid(Target.IosUDID.Iphone12)
-
+        addDeviceName(Target.DeviceName.Iphone6s)
+        addUdid(Target.IosUDID.Iphone6s)
+        addBundleID(Target.BundleID.APPLE_CALCULATOR_BUNDLE_ID)
 
     }
 
+
+    @Test
+    fun wmAndroidPartDemo() {
+        val thread = Thread {
+            ParseUtil.execCmdShell("./android_wm_.sh", "/auto_test/logCatcher/")
+        }
+        thread.start()
+
+
+        startTest()
+        /*** BluetoothAdapter* */
+        deviceListTest()
+
+        singUpNewDeviceTest()
+        loginTest()
+        deviceInfoSetName()
+        cloudSettingORingCloud()
+
+    }
     @Test
     fun oIosRingWMDemo() {
 //        val wait = WebDriverWait(driver?.let { it }, 10)
@@ -153,7 +171,7 @@ class WMReportTest: BaseExtentReportTest() {
 //                extentTest.info("Current RSSI ：${findElement(By.id(itemTextRSSI)).text}")
 //                click()
 //            }
-            wait.waitForVisibleByText(driver!!, By.id(itemTextID), "WM_willy_test", 10)
+            wait.waitForVisibleByText(driver!!, By.id(itemTextID), "targetBLEDevice", 10)
 //
 //
 //
@@ -162,7 +180,7 @@ class WMReportTest: BaseExtentReportTest() {
 //
             list.forEach {
 //                wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.id(viewID)))
-                if (it.findElement(By.id(itemTextID)).text == "WM_willy_test") {
+                if (it.findElement(By.id(itemTextID)).text == targetBLEDevice) {
                     val messageInfo =
                             "Current ID ：${it.findElement(By.id(itemTextID)).text},\n" +
                             "Current MAC ：${it.findElement(By.id(itemTextMAC)).text},\n" +
@@ -187,7 +205,27 @@ class WMReportTest: BaseExtentReportTest() {
 
 
     }
+    @Test
+    fun singUpNewDeviceTest(){
+        val wait = WebDriverWait(driver?.let { it }, 10)
+        val extentTest: ExtentTest = extent!!.createTest("SetNewDevice")
 
+        val inputPasswordEditOneText = "${targetPackageName}:id/edt_ble_password1"
+        val inputPasswordEditTwoText = "${targetPackageName}:id/edt_ble_password2"
+        val applyButton = "${targetPackageName}:id/btn_apply"
+
+        wait.untilViewLoad(inputPasswordEditOneText)
+        extentTest.screenshotInfo(driver!!, "signUpPage", "Set New Device Page.")
+
+        driver?.findElementById(inputPasswordEditOneText)?.sendKeys("123456")
+        driver?.findElementById(inputPasswordEditTwoText)?.sendKeys("123456")
+        extentTest.screenshotInfo(driver!!, "afterInputNewPassword", "Auto input new password test.")
+        wait.until(ExpectedConditions.attributeToBeNotEmpty(driver?.findElementById(inputPasswordEditTwoText), "text"))
+
+
+        extentTest.log(Status.PASS,"pass")
+        driver?.findElementById(applyButton)?.click()
+    }
     @Test
     fun loginTest(){
         val wait = WebDriverWait(driver?.let { it }, 10)
@@ -200,7 +238,7 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(inputPasswordEditText)
         extentTest.screenshotInfo(driver!!, "LoginPage", "Login device page.")
 
-        extentTest.info("Current Device Info ：${driver?.findElement(By.id(deviceInfoText))?.text}")
+//        extentTest.info("Current Device Info ：${driver?.findElement(By.id(deviceInfoText))?.text?:"empty"}")
 
         driver?.findElementById(inputPasswordEditText)?.sendKeys("wrong123456")
         extentTest.screenshotInfo(driver!!, "AfterInputWrong", "Auto input wrong password test.")
@@ -230,8 +268,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
         listDrawerPage?.get(6)?.click()
 
         wait.untilViewLoad(remoteApplyButton)
@@ -255,6 +293,27 @@ class WMReportTest: BaseExtentReportTest() {
         driver?.pressKey(KeyEvent(AndroidKey.BACK))
         driver?.pressKey(KeyEvent(AndroidKey.BACK))
 
+
+    }
+
+
+    private fun backTODashboardWaiting(extentTest: ExtentTest) {
+
+        val wait = WebDriverWait(driver?.let { it }, 10)
+        val terminalBlockLayout = "${targetPackageName}:id/action_bar_root"
+        wait.untilViewLoad(terminalBlockLayout)
+
+        driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"開啟導覽匣\"]")?.click()
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        listDrawerPage?.get(0)?.click()
+        Thread.sleep(5000)
+        extentTest.screenshotInfo(driver, "backToDashboard", "Back to dash board and waiting five seconds.")
+
+        driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage2 = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        listDrawerPage2?.get(5)?.click()
 
     }
     @Test
@@ -369,8 +428,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
         listDrawerPage?.get(1)?.click()
 
         wait.untilViewLoad(terminalBlockLayout)
@@ -432,10 +491,10 @@ class WMReportTest: BaseExtentReportTest() {
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
 
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout")))
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
         extentTest.screenshotInfo(driver!!,"navigationBar","After click navigation bar button.")
 
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
         mutableListOf<DrawerPageData>().apply {
             val itemText = "${targetPackageName}:id/design_menu_item_text"
 
@@ -467,8 +526,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
         listDrawerPage?.get(3)?.click()
 
 
@@ -512,6 +571,54 @@ class WMReportTest: BaseExtentReportTest() {
 
         extentTest.pass("Reset Device Name pass.")
         extentTest.pass("Reset Password pass.")
+
+    }
+
+    @Test
+    fun deviceInfoSetName() {
+        val wait = WebDriverWait(driver?.let { it }, 10)
+        val extentTest: ExtentTest = extent!!.createTest("DeviceInfo")
+        val textName = "${targetPackageName}:id/txt_name"
+        val textInfo = "${targetPackageName}:id/txt_info"
+
+        val buttonResetPassword = "${targetPackageName}:id/btn_ResetPW"
+        val buttonEdit= "${targetPackageName}:id/btn_EditConfig"
+
+        val terminalBlockLayout = "${targetPackageName}:id/action_bar_root"
+        wait.untilViewLoad(terminalBlockLayout)
+
+        driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        listDrawerPage?.get(3)?.click()
+
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")))
+
+        extentTest.screenshotInfo(driver!!,"deviceInfoPage","The device info page.")
+
+        val deviceInfoList = driver!!.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")
+
+        deviceInfoList.forEach {
+            extentTest.info("${it.findElement(By.id(textName)).text}： ${it.findElement(By.id(textInfo)).text}")
+        }
+
+        wait.untilViewLoad(buttonEdit)
+        driver!!.findElement(By.id(buttonEdit)).click()
+
+        val edtDevName = "${targetPackageName}:id/edt_devName"
+
+        val buttonApplyDevName = "${targetPackageName}:id/btn_change_apply"
+
+        wait.untilViewLoad(edtDevName)
+        driver!!.findElement(By.id(edtDevName)).sendKeys("WillyAppium_${DateUtil.getCurrentDate()}")
+        driver!!.findElement(By.id(buttonApplyDevName)).click()
+
+        wait.untilViewLoad(buttonEdit)
+        ParseUtil.parseDeviceInfoTestLog("Device Info log :", extentTest)
+
+        extentTest.pass("Reset Device Name pass.")
 
     }
     @Test
@@ -577,8 +684,8 @@ class WMReportTest: BaseExtentReportTest() {
         val terminalBlockLayout = "${targetPackageName}:id/action_bar_root"
         wait.untilViewLoad(terminalBlockLayout)
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
         listDrawerPage?.get(3)?.click()
 
         wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")))
@@ -612,8 +719,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
         Thread.sleep(1000)
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
         listDrawerPage?.get(2)?.click()
 
         wait.untilViewLoad(buttonEnable)
@@ -702,8 +809,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
         listDrawerPage?.get(5)?.click()
 
 
@@ -755,6 +862,88 @@ class WMReportTest: BaseExtentReportTest() {
 
 
     }
+
+    @Test
+    fun cloudSettingORingCloud() {
+        val wait = WebDriverWait(driver?.let { it }, 300)
+        val extentTest: ExtentTest = extent!!.createTest("Cloud Setting")
+        val listTable = "${targetPackageName}:id/list_table"
+        val textName = "${targetPackageName}:id/txt_name"
+        val textInfo = "${targetPackageName}:id/txt_info"
+        val buttonEdit = "${targetPackageName}:id/btn_EditConfig"
+
+        val terminalBlockLayout = "${targetPackageName}:id/action_bar_root"
+        wait.untilViewLoad(terminalBlockLayout)
+
+        driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        listDrawerPage?.get(5)?.click()
+
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[1]/android.widget.ListView/android.widget.LinearLayout[6]")))
+
+
+        extentTest.screenshotInfo(driver!!,"cloudSettingLTE","Cloud setting page.")
+
+
+        val editTextBrokerAddress = "${targetPackageName}:id/edt_brokerAddress"
+        val editTextCloudName = "${targetPackageName}:id/edt_cloudName"
+
+        val editTextMQTTPort = "${targetPackageName}:id/edit_MQTT_Port"
+
+
+        driver!!.findElement(By.id(buttonEdit)).click()
+        wait.untilViewLoad(editTextBrokerAddress)
+
+        driver!!.findElement(By.id(editTextCloudName)).click()
+
+
+        val oringCloud = "android:id/text1"
+        wait.untilViewLoad(oringCloud)
+        driver!!.findElement(By.id(oringCloud)).click()
+
+        driver!!.findElement(By.id(editTextMQTTPort)).clear()
+        driver!!.findElement(By.id(editTextMQTTPort)).sendKeys("1883")
+
+
+        val changeApply = "${targetPackageName}:id/btn_change_apply"
+
+
+        wait.untilViewLoad(changeApply)
+        driver!!.findElement(By.id(changeApply)).click()
+
+        wait.untilViewLoad(listTable)
+        extentTest.screenshotInfo(driver!!,"cloudSettingEdited","After Cloud setting edited.")
+
+        val loginLTE = "${targetPackageName}:id/btn_get_ApiKEY"
+        driver!!.findElement(By.id( loginLTE)).click()
+
+        val orgNameXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[3]/android.view.View[3]/android.view.View[1]/android.view.View[2]/android.widget.EditText"
+        val emailXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[3]/android.view.View[3]/android.view.View[2]/android.view.View[2]/android.widget.EditText"
+        val passwordXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[3]/android.view.View[3]/android.view.View[3]/android.view.View[2]/android.widget.EditText"
+        val loginXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[3]/android.view.View[3]/android.widget.Button"
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath(orgNameXpath)))
+        driver!!.findElement(By.ByXPath(orgNameXpath)).sendKeys("iot-terminal-block")
+        driver!!.findElement(By.ByXPath(emailXpath)).sendKeys("iot-terminal-block@weidmuller.com")
+        driver!!.findElement(By.ByXPath(passwordXpath)).sendKeys("DQwp4hTqbyN8")
+        driver!!.findElement(By.ByXPath(loginXpath)).click()
+
+//        extentTest.info("After cloud setting edited ：")
+//        deviceInfoList.forEach {
+//            extentTest.info("${it.findElement(By.id(textName)).text}： ${it.findElement(By.id(textInfo)).text}")
+//        }
+        Thread.sleep(3000)
+        wait.untilViewLoad(buttonEdit)
+        backTODashboardWaiting(extentTest)
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[1]/android.widget.ListView/android.widget.LinearLayout[6]")))
+        extentTest.screenshotInfo(driver!!,"remoteControlLogin","After Login.")
+
+        ParseUtil.parseCloudSettingTestLog("Cloud setting log :", extentTest)
+
+
+    }
     @Test
     fun networkStatusPage() {
         val wait = WebDriverWait(driver?.let { it }, 10)
@@ -769,8 +958,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
         listDrawerPage?.get(4)?.click()
 
         wait.until(ExpectedConditions.elementToBeClickable(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout[5]")))
@@ -934,7 +1123,7 @@ class WMReportTest: BaseExtentReportTest() {
 
 
         wait.untilViewLoad(loginButton)
-        extentTest.screenshotInfo(driver!!, "loginPage", "login page")
+        extentTest.screenshotInfo(driver!!, "myLoginPage", "Login page.")
 
         driver?.findElementById(editTextAccount)?.sendKeys("0986888333")
         wait.until(ExpectedConditions.attributeToBeNotEmpty(driver?.findElementById(editTextAccount), "text"))

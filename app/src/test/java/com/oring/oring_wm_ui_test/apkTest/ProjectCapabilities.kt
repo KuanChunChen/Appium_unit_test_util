@@ -28,7 +28,6 @@ class ProjectCapabilities {
             val capabilities = DesiredCapabilities()
 
             capabilities.setCapability("automationName", "XCUITest")
-            capabilities.setCapability( "bundleId" , "tw.com.taiwantaxi.CallStation" )
 //            capabilities.setCapability("browserName", "Safari")
 
 //            capabilities.setCapability("bundleId", "<your bundle id>");
@@ -45,6 +44,12 @@ class ProjectCapabilities {
     }
 
 
+}
+
+
+fun DesiredCapabilities.addBundleID(bundleId: String) {
+
+    setCapability("bundleId", bundleId)
 }
 
 fun DesiredCapabilities.addDeviceName(deviceName: String) {

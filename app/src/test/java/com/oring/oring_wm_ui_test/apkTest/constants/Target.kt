@@ -10,10 +10,25 @@ object Target {
 
 
     }
+    object BundleID {
+        const val ORING_WM_BUNDLE_ID = "com.oring.weidmulleriosapp"
+        const val TAIWAN_TAXI_BUNDLE_ID = "tw.com.taiwantaxi.CallStation"
+        const val APPLE_CALCULATOR_BUNDLE_ID = "com.apple.calculator"
 
+
+
+    }
     object PackageName {
         const val SHENGDA_PUMP_PACKAGE = "com.oringnet.www.shengdapump"
         const val ORING_LIGHT_PACKAGE = "com.oring.oringlight"
+        const val ORING_WM_PACKAGE = "com.oringnet.wm"
+
+
+    }
+
+    object BLEDeviceName{
+        const val WillyTest = "WM_willy_test"
+        const val InitTest = "WM_iot_test08"
         const val ORING_WM_PACKAGE = "com.oringnet.wm"
 
 
@@ -30,18 +45,19 @@ object Target {
     }
 
     object IosVersion {
-
+        const val Ios12_0 = "12.0"
         const val Ios14_5 = "14.5"
     }
     object DeviceName {
         const val MonitorPixel2_API_24 = "emulator-5554"
         const val K52 = "LMK520GYPZCYCAEEM7"
-        const val Iphone12 = "iphone 12 pro"
-
+        const val Iphone12 = "cham_ip"
+        const val Iphone6s = "iPhone 6s"
     }
 
     object IosUDID {
         const val Iphone12 = "00008101-000E04900191003A"
+        const val Iphone6s = "6be6128f7bd9c1911e161a3fb549c36cdafe263c"
 
     }
 
