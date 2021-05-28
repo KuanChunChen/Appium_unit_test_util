@@ -116,6 +116,7 @@ class WMReportTest: BaseExtentReportTest() {
         /*** BluetoothAdapter* */
         deviceListTest()
         /*** FastBle*  BluetoothGatt CreateTest*/
+        singUpNewDeviceTest()
         loginTest()
         navigationBarPage()
 
@@ -282,16 +283,28 @@ class WMReportTest: BaseExtentReportTest() {
         driver?.findElementById(startButton)?.click()
 
         val webViewChild = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]"
-        try {
+//        try {
             wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath(webViewChild)))
             extentTest.screenshotInfo(driver!!, "remoteWebSite", "Remote control website page.")
-            extentTest.log(Status.PASS , "Pass.")
-        } catch (e: Exception) {
-            extentTest.log(Status.FAIL ,"Some error happened, cause ：\n " +
-                    "${e.message}")
-        }
-        driver?.pressKey(KeyEvent(AndroidKey.BACK))
-        driver?.pressKey(KeyEvent(AndroidKey.BACK))
+
+            val orgNameXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[3]/android.view.View[1]/android.view.View[2]/android.widget.EditText"
+            val emailXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[3]/android.view.View[2]/android.view.View[2]/android.widget.EditText"
+            val passwordXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[3]/android.view.View[3]/android.view.View[2]/android.widget.EditText"
+            val loginXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[3]/android.widget.Button"
+
+            wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath(orgNameXpath)))
+            driver!!.findElement(By.ByXPath(orgNameXpath)).sendKeys("iot-terminal-block")
+            driver!!.findElement(By.ByXPath(emailXpath)).sendKeys("iot-terminal-block@weidmuller.com")
+            driver!!.findElement(By.ByXPath(passwordXpath)).sendKeys("DQwp4hTqbyN8")
+            driver!!.findElement(By.ByXPath(loginXpath)).click()
+
+
+            extentTest.log(Status.PASS , "Remote control access success.")
+//        } catch (e: Exception) {
+//            extentTest.log(Status.FAIL ,"Some error happened, cause ：\n " +
+//                    "${e.message}")
+//        }
+
 
 
     }
