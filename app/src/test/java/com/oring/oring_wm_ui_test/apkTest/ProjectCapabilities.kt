@@ -1,8 +1,13 @@
 package com.oring.oring_wm_ui_test.apkTest
 
+import io.appium.java_client.AppiumDriver
+import io.appium.java_client.MobileElement
+import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.remote.AndroidMobileCapabilityType
+import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.remote.DesiredCapabilities
 import java.io.File
+
 
 class ProjectCapabilities {
 
@@ -33,9 +38,9 @@ class ProjectCapabilities {
 //            capabilities.setCapability("bundleId", "<your bundle id>");
 //            capabilities.setCapability("xcodeOrgId", "<your org id>");
 //            capabilities.setCapability("xcodeSigningId", "iPhone Developer");
-//            capabilities.setCapability("updatedWDABundleId", "<bundle id in scope of provisioning profile>");
+//            capabilities.setCapability("updatedWDABundleId", "appium.io.test")
 
-            capabilities.setCapability("newCommandTimeout", "6000")
+//            capabilities.setCapability("newCommandTimeout", "6000")
 
 
 
@@ -46,6 +51,23 @@ class ProjectCapabilities {
 
 }
 
+
+fun DesiredCapabilities.addXcodeConfigFile(configFilePath: String) {
+
+    setCapability("xcodeConfigFile", configFilePath)
+}
+
+
+fun DesiredCapabilities.addXcodeOrgId(orgId: String) {
+
+    setCapability("xcodeOrgId", orgId)
+}
+
+
+fun DesiredCapabilities.addXcodeSigningId(signingId: String) {
+
+    setCapability("xcodeSigningId", signingId)
+}
 
 fun DesiredCapabilities.addBundleID(bundleId: String) {
 
@@ -88,3 +110,4 @@ fun DesiredCapabilities.addPackage(packageName: String) {
 fun DesiredCapabilities.addAppActivity(activityName: String){
     setCapability("appActivity", activityName)
 }
+

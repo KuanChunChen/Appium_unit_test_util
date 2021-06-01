@@ -37,11 +37,15 @@ class WMReportTest: BaseExtentReportTest() {
         addAppActivity("com.oring.LoginActivity")
     }
     private fun addIosCapability() = ProjectCapabilities.iosBaseCapabilities().apply {
-        addPlatformVersion(Target.IosVersion.Ios12_0)
+        addPlatformVersion(Target.IosVersion.Ios14_5)
         addPlatformName(Target.Platform.IOS)
-        addDeviceName(Target.DeviceName.Iphone6s)
-        addUdid(Target.IosUDID.Iphone6s)
-        addBundleID(Target.BundleID.APPLE_CALCULATOR_BUNDLE_ID)
+        addDeviceName(Target.DeviceName.Iphone12)
+        addUdid(Target.IosUDID.Iphone12)
+        addBundleID(Target.BundleID.ORING_WM_BUNDLE_ID)
+//        addBundleID(Target.BundleID.APPLE_CALCULATOR_BUNDLE_ID)
+        addXcodeOrgId(Target.OrgID.ORing)
+//        addXcodeConfigFile(System.getProperty("user.dir") + Target.ConfigFile.ORing)
+        addXcodeSigningId(Target.SigningId.IPhone)
 
     }
 
@@ -64,17 +68,7 @@ class WMReportTest: BaseExtentReportTest() {
         cloudSettingORingCloud()
 
     }
-    @Test
-    fun oIosRingWMDemo() {
-//        val wait = WebDriverWait(driver?.let { it }, 10)
-//        val extentTest: ExtentTest = extent!!.createTest("Start")
-//        Runtime.getRuntime().exec("/usr/bin/open -a Terminal /path/to/the/executable");
-//        val command = "/usr/bin/xterm"
-//        val rt = Runtime.getRuntime()
-//        val pr = rt.exec(command)
-//        Runtime.getRuntime().exec("/bin/bash -c iTerm2");
 
-    }
 
     private val confirmButton: String = "${targetPackageName}:id/txt_ble"
     private val layoutBaby: String = "${targetPackageName}:id/layout_baby"
@@ -248,7 +242,7 @@ class WMReportTest: BaseExtentReportTest() {
         driver?.findElementById(inputPasswordEditText)?.sendKeys("123456")
         wait.until(ExpectedConditions.attributeToBeNotEmpty(driver?.findElementById(inputPasswordEditText), "text"))
         extentTest.screenshotInfo(driver!!, "AfterInput", "Auto input password.")
-        ParseUtil.parseLoginTestLog("Login test log :", extentTest)
+//        ParseUtil.parseLoginTestLog("Login test log :", extentTest)
 
         extentTest.log(Status.PASS,"pass")
         driver?.findElementById(loginButton)?.click()
@@ -580,7 +574,7 @@ class WMReportTest: BaseExtentReportTest() {
         driver!!.findElement(By.id(buttonApplyDevName)).click()
 
         wait.untilViewLoad(buttonEdit)
-        ParseUtil.parseDeviceInfoTestLog("Device Info log :", extentTest)
+//        ParseUtil.parseDeviceInfoTestLog("Device Info log :", extentTest)
 
         extentTest.pass("Reset Device Name pass.")
         extentTest.pass("Reset Password pass.")
@@ -629,7 +623,7 @@ class WMReportTest: BaseExtentReportTest() {
         driver!!.findElement(By.id(buttonApplyDevName)).click()
 
         wait.untilViewLoad(buttonEdit)
-        ParseUtil.parseDeviceInfoTestLog("Device Info log :", extentTest)
+//        ParseUtil.parseDeviceInfoTestLog("Device Info log :", extentTest)
 
         extentTest.pass("Reset Device Name pass.")
 
@@ -803,7 +797,7 @@ class WMReportTest: BaseExtentReportTest() {
         driver!!.findElement(By.id(buttonBack)).click()
 
 
-        ParseUtil.parseGateWayTestLog("Gate way test page lost :" , extentTest)
+//        ParseUtil.parseGateWayTestLog("Gate way test page lost :" , extentTest)
         extentTest.pass("pass.")
 
 
@@ -871,7 +865,7 @@ class WMReportTest: BaseExtentReportTest() {
         deviceInfoList.forEach {
             extentTest.info("${it.findElement(By.id(textName)).text}： ${it.findElement(By.id(textInfo)).text}")
         }
-        ParseUtil.parseCloudSettingTestLog("Cloud setting log :", extentTest)
+//        ParseUtil.parseCloudSettingTestLog("Cloud setting log :", extentTest)
 
 
     }
@@ -953,7 +947,7 @@ class WMReportTest: BaseExtentReportTest() {
         wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[1]/android.widget.ListView/android.widget.LinearLayout[6]")))
         extentTest.screenshotInfo(driver!!,"remoteControlLogin","After Login.")
 
-        ParseUtil.parseCloudSettingTestLog("Cloud setting log :", extentTest)
+//        ParseUtil.parseCloudSettingTestLog("Cloud setting log :", extentTest)
 
 
     }
@@ -1012,7 +1006,7 @@ class WMReportTest: BaseExtentReportTest() {
 //        wait.untilViewLoad(listTable)
 
 
-        ParseUtil.parseNetworkStatusTestLog("Network setting log :", extentTest)
+//        ParseUtil.parseNetworkStatusTestLog("Network setting log :", extentTest)
 
 
 

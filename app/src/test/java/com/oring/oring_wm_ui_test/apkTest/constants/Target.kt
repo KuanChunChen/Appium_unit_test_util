@@ -47,23 +47,43 @@ object Target {
     object IosVersion {
         const val Ios12_0 = "12.0"
         const val Ios14_5 = "14.5"
+        const val Ios14_6 = "14.6"
     }
     object DeviceName {
         const val MonitorPixel2_API_24 = "emulator-5554"
         const val K52 = "LMK520GYPZCYCAEEM7"
-        const val Iphone12 = "cham_ip"
+        const val Iphone12 = "iPhone 12.*"
         const val Iphone6s = "iPhone 6s"
     }
 
+
+    object OrgID {
+        const val ORing = "N9K2B9233C"
+        const val ORing2 = "G9ZN4KXX66"
+    }
+
+
+    object SigningId {
+        const val IPhone = "iPhone Developer"
+    }
+
     object IosUDID {
+
+        const val Auto = "auto"
         const val Iphone12 = "00008101-000E04900191003A"
         const val Iphone6s = "6be6128f7bd9c1911e161a3fb549c36cdafe263c"
 
     }
 
+    object ConfigFile {
+
+        const val ORing = ".xcconfig"
+
+    }
+
     object Platform {
         const val Android = "Android"
-        const val IOS = "Ios"
+        const val IOS = "iOS"
 
     }
 

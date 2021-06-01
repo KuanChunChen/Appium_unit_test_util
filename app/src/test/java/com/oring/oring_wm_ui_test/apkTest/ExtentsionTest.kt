@@ -3,14 +3,14 @@ package com.oring.oring_wm_ui_test.apkTest
 import com.aventstack.extentreports.ExtentTest
 import com.aventstack.extentreports.MediaEntityBuilder
 import com.aventstack.extentreports.Status
+import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileBy
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.ios.IOSDriver
 import org.apache.commons.io.FileUtils
-import org.openqa.selenium.By
-import org.openqa.selenium.OutputType
-import org.openqa.selenium.TakesScreenshot
-import org.openqa.selenium.WebElement
+import org.openqa.selenium.*
+import org.openqa.selenium.remote.RemoteWebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.io.File
@@ -47,6 +47,15 @@ fun ExtentTest.screenshotInfo(driver: AndroidDriver<MobileElement>?, fileName: S
 
 fun WebDriverWait.untilViewLoad(viewID: String): WebElement {
     return this.until(ExpectedConditions.presenceOfElementLocated(MobileBy.id(viewID)))
+
+}
+
+fun WebDriverWait.untilXpath(xPath: String): WebElement {
+    return this.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath(xPath)))
+
+}
+fun WebDriverWait.untilIosClassChain(iosClassChain: String): WebElement {
+    return this.until(ExpectedConditions.presenceOfElementLocated(MobileBy.iOSClassChain(iosClassChain)))
 
 }
 
@@ -100,4 +109,55 @@ fun scrollToId(driver: AndroidDriver<MobileElement>, id: String) {
 fun scrollToText(driver: AndroidDriver<MobileElement>, text: String) {
     val el = driver.findElementByAndroidUIAutomator("new UiScrollable("
             + "new UiSelector().scrollable(true)).scrollIntoView(" + "new UiSelector().text(\"" + text + "\"));")
+}
+
+fun iosScrollToText(driver: AndroidDriver<MobileElement>, elementName: String, findClassName: String) {
+    val parent = driver.findElement(By.className(findClassName)) as RemoteWebElement
+    val parentID = parent.id
+    val scrollObject = HashMap<String, String>()
+    scrollObject["element"] = parentID
+    scrollObject["name"] = elementName
+    driver.executeScript("mobile:scroll", scrollObject)
+}
+
+fun iosScrollToPredicateString(driver: AndroidDriver<MobileElement>, predicateString: String, findClassName: String) {
+
+    val parent = driver.findElement(By.className(findClassName)) as RemoteWebElement
+
+    val parentID = parent.id
+    val scrollObject = HashMap<String, String>()
+    scrollObject["element"] = parentID
+
+    scrollObject["predicateString"] = predicateString
+    driver.executeScript("mobile:scroll", scrollObject)
+
+}
+
+fun scrollToUnSeeElement(driver: AndroidDriver<MobileElement>, elementIosChain: String) {
+//    val element: WebElement = driver.findElement(MobileBy.iOSClassChain(elementIosChain))
+    val element: WebElement = driver.findElementByName(elementIosChain)
+
+    val js = driver as JavascriptExecutor
+
+    val scrollObjects = HashMap<Any, Any>()
+    scrollObjects["element"] = (element as RemoteWebElement).id
+    scrollObjects["direction"] = "down"
+    driver.executeScript("mobile: scroll", scrollObjects)
+}
+
+fun tapItemByDescription(driver: AndroidDriver<MobileElement>, text: String) {
+    println("tapItemByDescription(): $text")
+    val js = driver as JavascriptExecutor
+    val scrollObject = HashMap<Any, Any>()
+    scrollObject["predicateString"] = "name == \"RELAY\" AND type == \"XCUIElementTypeOther\""
+    js.executeScript("mobile: scroll", scrollObject)
+
+}
+
+fun scrollToDown(driver: AndroidDriver<MobileElement>) {
+
+    val js = driver as JavascriptExecutor
+    val scrollObject = HashMap<String, String>()
+    scrollObject["direction"] = "down"
+    js.executeScript("mobile: scroll", scrollObject)
 }
