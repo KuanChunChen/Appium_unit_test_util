@@ -123,6 +123,12 @@ object ParseUtil {
 
     }
 
+    fun parseIOSAllLogName(listLog: MutableList<LogCatchModel>, extentTest: ExtentTest) {
+        listLog.forEach {
+            println(Gson().toJson(it))
+        }
+    }
+
     fun parseAllLogName(listLog: MutableList<LogCatchModel>, extentTest: ExtentTest) {
 
         val DSQN: ExtentTest = extentTest.createNode(LogName.DSQN)
@@ -459,6 +465,26 @@ object ParseUtil {
             listLog.apply {
                 add(LogCatchModel(splitDate, splitMessageList[0].trim(), splitMessageList[1],splitMessage))
             }
+
+        }
+        return listLog
+
+    }
+
+
+    fun readIDeviceLogMessage(directory: String): MutableList<LogCatchModel> {
+        val listLog = mutableListOf<LogCatchModel>()
+        File(directory).forEachLine {
+//            val splitDate = it.substring(0,32)
+//            val splitMessage = it.substring(32)
+//
+//            val splitMessageList = splitMessage.split(Pattern.compile(":"),2)
+//
+//            listLog.apply {
+//                add(LogCatchModel(splitDate, splitMessageList[0].trim(), splitMessageList[1],splitMessage))
+//            }
+
+            println(Gson().toJson(it))
 
         }
         return listLog

@@ -34,15 +34,37 @@ class IOSWMReportTest : BaseExtentReportTest() {
 
     @Test
     fun oIosRingWMDemo() {
-        deviceListTest()
-        dashboardTest()
-        navigatorBarTest()
-        deviceInfoTest()
-        cloudSettingTest()
-        lteConnectionStatusTest()
-        remoteControlTest()
-        reportingIntervalTest()
+
+//        val thread = Thread {
+//            ParseUtil.execCmdShell("./ios_wn_.sh", "/auto_test/iosLogCatcher/")
+//        }
+//        thread.start()
+//        deviceListTest()
+//        dashboardTest()
+//        navigatorBarTest()
+//        deviceInfoTest()
+//        cloudSettingTest()
+//        lteConnectionStatusTest()
+//        remoteControlTest()
+//        reportingIntervalTest()
 //        gateWayTest()
+        captureLogcat()
+    }
+
+    @Test
+    fun captureLogcat() {
+        val wait = WebDriverWait(driver?.let { it }, 10)
+        val extentTest: ExtentTest = extent!!.createTest("LogCat Message")
+        val listLog = ParseUtil.readIDeviceLogMessage(System.getProperty("user.dir") + "/auto_test/iosLogCatcher/wn_ios_log.txt")
+
+
+
+
+
+//        ParseUtil.parseIOSAllLogName(listLog, extentTest)
+
+//        scenario.createNode(Given::class.java, "Jeff has bought a microwave for $100").pass("pass")
+
     }
 
     @Test
