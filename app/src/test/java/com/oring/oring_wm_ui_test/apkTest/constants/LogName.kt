@@ -48,6 +48,14 @@ object LogName {
     const val AI_value = "AI_value"
     const val AI_raw = "AI_raw"
     const val Dashboard = "Dashboard"
+    const val ForcingPage = "ForcingPage"
+
+    const val AiPage = "AiPage"
+    const val DiPage = "DiPage"
+    const val DoPage = "DoPage"
+    const val RTDPage = "RTDPage"
+    const val NetworkStatus = "NetworkStatus"
+
     const val DeviceInfo = "DeviceInfo"
     const val RTD_mode = "RTD_mode"
     const val finish = "finish"

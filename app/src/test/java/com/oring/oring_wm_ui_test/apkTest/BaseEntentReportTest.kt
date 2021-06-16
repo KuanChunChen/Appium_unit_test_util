@@ -28,7 +28,7 @@ open class BaseExtentReportTest  {
         this.driver = AndroidDriver(webDriverURL, capabilities)
 //        this.iosDriver = IOSDriver(webDriverURL, capabilities)
         this.extent = ExtentReports().apply {
-            attachReporter(ExtentSparkReporter(System.getProperty("user.dir") + "//auto_test//reports//spark.html"))
+            attachReporter(ExtentSparkReporter(System.getProperty("user.dir") + "//auto_test//reports//evt.html"))
         }
     }
 

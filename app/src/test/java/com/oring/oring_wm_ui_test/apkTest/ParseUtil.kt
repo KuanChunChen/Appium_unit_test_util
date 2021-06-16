@@ -64,6 +64,106 @@ object ParseUtil {
 
     }
 
+    fun parseForceModeLog(targetName: String, extentTest: ExtentTest){
+
+        val node = extentTest.createNode(targetName)
+        parseLogName{
+            when (it.logName) {
+
+                LogName.ForcingPage-> {
+                    node.log(Status.INFO, it.totalMessage)
+                }
+            }
+        }
+
+    }
+
+
+    fun parseDOPageLog(targetName: String, extentTest: ExtentTest){
+
+        val node = extentTest.createNode(targetName)
+        parseLogName{
+            when (it.logName) {
+
+                LogName.DoPage-> {
+                    node.log(Status.INFO, it.totalMessage)
+                }
+            }
+        }
+
+    }
+
+    fun parseDIPageLog(targetName: String, extentTest: ExtentTest){
+
+        val node = extentTest.createNode(targetName)
+        parseLogName{
+            when (it.logName) {
+
+                LogName.DiPage-> {
+                    node.log(Status.INFO, it.totalMessage)
+                }
+            }
+        }
+
+    }
+
+
+    fun parseAIPageLog(targetName: String, extentTest: ExtentTest){
+
+        val node = extentTest.createNode(targetName)
+        parseLogName{
+            when (it.logName) {
+
+                LogName.AiPage-> {
+                    node.log(Status.INFO, it.totalMessage)
+                }
+            }
+        }
+
+    }
+
+    fun parseRTDPageLog(targetName: String, extentTest: ExtentTest){
+
+        val node = extentTest.createNode(targetName)
+        parseLogName{
+            when (it.logName) {
+
+                LogName.RTDPage-> {
+                    node.log(Status.INFO, it.totalMessage)
+                }
+            }
+        }
+
+    }
+
+    fun parseNetworkStatusLog(targetName: String, extentTest: ExtentTest){
+
+        val node = extentTest.createNode(targetName)
+        parseLogName{
+            when (it.logName) {
+
+                LogName.NetworkStatus-> {
+                    node.log(Status.INFO, it.totalMessage)
+                }
+            }
+        }
+
+    }
+
+
+    fun parseCloudSettingTestLog(targetName: String, extentTest: ExtentTest){
+
+        val node = extentTest.createNode(targetName)
+        parseLogName{
+            when (it.logName) {
+
+                LogName.CloudSetting-> {
+                    node.log(Status.INFO, it.totalMessage)
+                }
+            }
+        }
+
+    }
     fun parseDeviceInfoTestLog(targetName: String, extentTest: ExtentTest){
 
         val node = extentTest.createNode(targetName)
@@ -75,6 +175,8 @@ object ParseUtil {
         }
 
     }
+
+
 
     fun parseGateWayTestLog(targetName: String, extentTest: ExtentTest){
 
@@ -88,40 +190,8 @@ object ParseUtil {
     }
 
 
-    fun parseCloudSettingTestLog(targetName: String, extentTest: ExtentTest){
-
-        val node = extentTest.createNode(targetName)
-        parseLogName{
-
-            if (it.logName != null && it.logName!!.contains("CloudSetting")) {
-                node.log(Status.INFO, it.logName + ":" + it.message)
-            }
-
-            when (it.logName) {
-
-                LogName.Cloud,
-                LogName.CS_Info,
-                LogName.HEX -> {
-                    node.log(Status.INFO, it.totalMessage)
-                }
-            }
-        }
-
-    }
 
 
-    fun parseNetworkStatusTestLog(targetName: String, extentTest: ExtentTest){
-
-        val node = extentTest.createNode(targetName)
-        parseLogName{
-
-            if (it.logName != null && it.logName!!.contains(LogName.NetworkStatusTest)) {
-                node.log(Status.INFO, it.logName + ":" + it.message)
-            }
-
-        }
-
-    }
 
     fun parseIOSAllLogName(listLog: MutableList<LogCatchModel>, extentTest: ExtentTest) {
         listLog.forEach {
@@ -490,6 +560,7 @@ object ParseUtil {
         return listLog
 
     }
+
 
     fun execCmdShell(command: String, path: String): Process? {
 

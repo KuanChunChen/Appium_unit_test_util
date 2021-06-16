@@ -28,7 +28,7 @@ object Target {
 
     object BLEDeviceName{
         const val WillyTest = "WM_willy_test"
-        const val InitTest = "WM_iot_test08"
+        const val InitTest = "WM_iot_test09"
         const val ORING_WM_PACKAGE = "com.oringnet.wm"
 
 

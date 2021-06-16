@@ -36,18 +36,6 @@ class WMReportTest: BaseExtentReportTest() {
         addPackage(targetPackageName)
         addAppActivity("com.oring.LoginActivity")
     }
-    private fun addIosCapability() = ProjectCapabilities.iosBaseCapabilities().apply {
-        addPlatformVersion(Target.IosVersion.Ios14_5)
-        addPlatformName(Target.Platform.IOS)
-        addDeviceName(Target.DeviceName.Iphone12)
-        addUdid(Target.IosUDID.Iphone12)
-        addBundleID(Target.BundleID.ORING_WM_BUNDLE_ID)
-//        addBundleID(Target.BundleID.APPLE_CALCULATOR_BUNDLE_ID)
-        addXcodeOrgId(Target.OrgID.ORing)
-//        addXcodeConfigFile(System.getProperty("user.dir") + Target.ConfigFile.ORing)
-        addXcodeSigningId(Target.SigningId.IPhone)
-
-    }
 
 
     @Test
@@ -113,16 +101,21 @@ class WMReportTest: BaseExtentReportTest() {
         singUpNewDeviceTest()
         loginTest()
         navigationBarPage()
-
-
-        /*** SP_SW  EEWW    DashboardTest AI_value AI_raw RTD_mode finish*/
+//
+//
+//        /*** SP_SW  EEWW    DashboardTest AI_value AI_raw RTD_mode finish*/
         dashboardPage()
         dashboardIOPage()
-////        /**GatewayTest */
+        forceModePage()
+        diPage()
+        doPage()
+        aiPage()
+        rtdPage()
+//////        /**GatewayTest */
         gateWayPage()
         deviceInfoPage()
         reLoginAfterResetPassword()
-//        /*** Cloud CS_Info CloudSetting HEX*/
+////        /*** Cloud CS_Info CloudSetting HEX*/
         networkStatusPage()
         cloudSettingPage()
         remoteControl()
@@ -130,7 +123,7 @@ class WMReportTest: BaseExtentReportTest() {
          * MiniDump
          * */
 
-        captureLogcat()
+//        captureLogcat()
     }
 
     @Test
@@ -166,13 +159,14 @@ class WMReportTest: BaseExtentReportTest() {
 //                extentTest.info("Current RSSI ：${findElement(By.id(itemTextRSSI)).text}")
 //                click()
 //            }
-            wait.waitForVisibleByText(driver!!, By.id(itemTextID), "targetBLEDevice", 10)
+            wait.waitForVisibleByText(driver!!, By.id(itemTextID), targetBLEDevice, 10)
 //
 //
 //
 //            extentTest.info(MarkupHelper.createCodeBlock(Gson().toJson(list), CodeLanguage.JSON));
 //
-//
+
+//            Thread.sleep(3000)
             list.forEach {
 //                wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.id(viewID)))
                 if (it.findElement(By.id(itemTextID)).text == targetBLEDevice) {
@@ -275,25 +269,32 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(startButton)
         extentTest.screenshotInfo(driver!!, "remoteControlStart", "Remote control start page.")
         driver?.findElementById(startButton)?.click()
+        Thread.sleep(5000)
 
+        driver?.findElementById(startButton)?.click()
         val webViewChild = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]"
 //        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath(webViewChild)))
-            extentTest.screenshotInfo(driver!!, "remoteWebSite", "Remote control website page.")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath(webViewChild)))
+        extentTest.screenshotInfo(driver!!, "remoteWebSite", "Remote control website page.")
 
-            val orgNameXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[3]/android.view.View[1]/android.view.View[2]/android.widget.EditText"
-            val emailXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[3]/android.view.View[2]/android.view.View[2]/android.widget.EditText"
-            val passwordXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[3]/android.view.View[3]/android.view.View[2]/android.widget.EditText"
-            val loginXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[3]/android.widget.Button"
+        Thread.sleep(3500)
 
-            wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath(orgNameXpath)))
-            driver!!.findElement(By.ByXPath(orgNameXpath)).sendKeys("iot-terminal-block")
-            driver!!.findElement(By.ByXPath(emailXpath)).sendKeys("iot-terminal-block@weidmuller.com")
-            driver!!.findElement(By.ByXPath(passwordXpath)).sendKeys("DQwp4hTqbyN8")
-            driver!!.findElement(By.ByXPath(loginXpath)).click()
+        val orgNameXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[2]/android.view.View[1]/android.view.View[2]/android.widget.EditText"
+        val emailXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[2]/android.view.View[2]/android.view.View[2]/android.widget.EditText"
+        val passwordXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[2]/android.view.View[3]/android.view.View[2]/android.widget.EditText"
+        val loginXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[1]/android.view.View[3]/android.view.View[2]/android.widget.Button"
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath(orgNameXpath)))
+        driver!!.findElement(By.ByXPath(orgNameXpath)).sendKeys("iot-terminal-block")
+        driver!!.findElement(By.ByXPath(emailXpath)).sendKeys("iot-terminal-block@weidmuller.com")
+        driver!!.findElement(By.ByXPath(passwordXpath)).sendKeys("DQwp4hTqbyN8")
+        driver!!.findElement(By.ByXPath(loginXpath)).click()
+
+        Thread.sleep(10000)
+        extentTest.screenshotInfo(driver!!, "remoteDevice", "Remote control device list page.")
 
 
-            extentTest.log(Status.PASS , "Remote control access success.")
+        extentTest.log(Status.PASS , "Remote control access success.")
 //        } catch (e: Exception) {
 //            extentTest.log(Status.FAIL ,"Some error happened, cause ：\n " +
 //                    "${e.message}")
@@ -490,6 +491,213 @@ class WMReportTest: BaseExtentReportTest() {
     }
 
     @Test
+    fun forceModePage(){
+        val wait = WebDriverWait(driver?.let { it }, 10)
+        val extentTest: ExtentTest = extent!!.createTest("ForceMode")
+
+        val buttonForce = "${targetPackageName}:id/btn_force"
+        val textForce = "${targetPackageName}:id/txt_force"
+
+        wait.untilViewLoad(buttonForce)
+        driver!!.findElement(By.id(buttonForce)).click()
+
+        wait.untilViewLoad(textForce)
+        extentTest.screenshotInfo(driver!!,"forceModePage","Force mode page.")
+
+        val textDo = "${targetPackageName}:id/txt_do"
+        scrollToId(driver!!,textDo)
+        Thread.sleep(2200)
+        wait.untilViewLoad(textDo)
+
+        val switchDO0 = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[2]/android.widget.LinearLayout[1]/android.widget.Switch"
+        val switchDO1 = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[2]/android.widget.LinearLayout[2]/android.widget.Switch"
+        val switchDO2 = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[2]/android.widget.LinearLayout[3]/android.widget.Switch"
+//        val switchDO3 = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[2]/android.widget.LinearLayout[4]/android.widget.Switch"
+
+        driver!!.findElement(By.ByXPath(switchDO0)).click()
+        Thread.sleep(1100)
+        driver!!.findElement(By.ByXPath(switchDO1)).click()
+        Thread.sleep(1100)
+        driver!!.findElement(By.ByXPath(switchDO2)).click()
+        Thread.sleep(1100)
+//        driver!!.findElement(By.ByXPath(switchDO3)).click()
+        Thread.sleep(800)
+        extentTest.screenshotInfo(driver!!, "clickDO", "After Click DO 0~2")
+
+        val textRtd = "${targetPackageName}:id/txt_relay"
+        scrollToId(driver!!,textRtd)
+        wait.untilViewLoad(textRtd)
+        extentTest.screenshotInfo(driver!!, "relayTextForce", "Scroll to Relay text.")
+//
+//        val switchRelay0 = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[1]/android.widget.LinearLayout[1]/android.widget.Switch"
+//        val switchRelay1 = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[1]/android.widget.LinearLayout[2]/android.widget.Switch"
+//        Thread.sleep(1100)
+//        driver!!.findElement(By.ByXPath(switchRelay0)).click()
+//        Thread.sleep(2200)
+//        driver!!.findElement(By.ByXPath(switchRelay1)).click()
+//
+//        extentTest.screenshotInfo(driver!!, "clickRelay", "After Click Relay 0~1")
+
+        ParseUtil.parseForceModeLog("Force mode log:", extentTest)
+        extentTest.log(Status.PASS, "pass.")
+        scrollToId(driver!!,buttonForce)
+        wait.untilViewLoad(buttonForce)
+        driver!!.findElement(By.id(buttonForce)).click()
+
+    }
+
+    @Test
+    fun diPage(){
+        val wait = WebDriverWait(driver?.let { it }, 10)
+        val extentTest: ExtentTest = extent!!.createTest("DI")
+        val buttonSetting = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[1]/android.widget.LinearLayout[1]/android.widget.ImageView[2]"
+        wait.untilXpath(buttonSetting)
+        driver!!.findElement(By.ByXPath(buttonSetting)).click()
+
+        extentTest.screenshotInfo(driver!!, "diConfig", "DI config page.")
+
+        val switchEnable ="${targetPackageName}:id/swt_enable"
+        driver!!.findElement(By.ById(switchEnable)).click()
+
+        val buttonClearCount ="${targetPackageName}:id/btn_clearCount"
+        wait.untilViewLoad(buttonClearCount)
+        extentTest.screenshotInfo(driver!!, "diClickEnable", "After click enable.")
+
+        val switchTrigger ="${targetPackageName}:id/swt_trigger"
+        driver!!.findElement(By.ById(switchTrigger)).click()
+
+        val textTriggerEvent ="${targetPackageName}:id/txt_trigger_event"
+        wait.untilViewLoad(switchTrigger)
+        extentTest.screenshotInfo(driver!!, "clickTrigger", "After click trigger button.")
+
+        val buttonApply ="${targetPackageName}:id/btn_apply"
+        driver!!.findElement(By.ById(buttonApply)).click()
+
+        ParseUtil.parseDIPageLog("DI page log:", extentTest)
+
+        extentTest.log(Status.PASS,"pass.")
+
+
+
+    }
+
+    @Test
+    fun doPage(){
+        val wait = WebDriverWait(driver?.let { it }, 10)
+        val extentTest: ExtentTest = extent!!.createTest("DO")
+
+        val buttonSetting = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[2]/android.widget.LinearLayout[1]/android.widget.ImageView[2]"
+        wait.untilXpath(buttonSetting)
+        driver!!.findElement(By.ByXPath(buttonSetting)).click()
+
+        extentTest.screenshotInfo(driver!!, "doConfig", "DO config page.")
+
+        val switchEnable ="${targetPackageName}:id/swt_enable"
+        driver!!.findElement(By.ById(switchEnable)).click()
+
+        Thread.sleep(1200)
+        extentTest.screenshotInfo(driver!!, "doClickEnable", "After click enable.")
+
+        val buttonApply ="${targetPackageName}:id/btn_apply"
+        driver!!.findElement(By.ById(buttonApply)).click()
+
+        Thread.sleep(1500)
+        ParseUtil.parseDOPageLog("DO page log:", extentTest)
+
+        extentTest.log(Status.PASS,"pass.")
+
+
+    }
+
+    @Test
+    fun aiPage(){
+        val wait = WebDriverWait(driver?.let { it }, 10)
+        val extentTest: ExtentTest = extent!!.createTest("AI")
+
+        val relayText = "${targetPackageName}:id/txt_relay"
+        scrollToId(driver!!,relayText)
+        wait.untilViewLoad(relayText)
+
+        Thread.sleep(1500)
+
+        val aiZeroXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[3]/android.widget.LinearLayout[1]"
+        wait.untilXpath(aiZeroXpath)
+        val layout = driver!!.findElement(By.ByXPath(aiZeroXpath))
+        val imageID = "${targetPackageName}:id/img_config"
+        layout.findElement(By.id(imageID)).click()
+        extentTest.screenshotInfo(driver!!, "aiPage", "AI config page.")
+
+        val switchEnable ="${targetPackageName}:id/swt_enable"
+        driver!!.findElement(By.ById(switchEnable)).click()
+
+
+
+        extentTest.screenshotInfo(driver!!, "aiClickEnable", "After Click Enable.")
+
+        val switchHighEnable ="${targetPackageName}:id/swt_high_enable"
+        val switchLowEnable ="${targetPackageName}:id/swt_low_enable"
+        val editTextLowAlarm ="${targetPackageName}:id/edt_low_alarm"
+        wait.untilViewLoad(switchHighEnable)
+        driver!!.findElement(By.ById(switchHighEnable)).click()
+        driver!!.findElement(By.ById(switchLowEnable)).click()
+        wait.untilViewLoad(editTextLowAlarm)
+        extentTest.screenshotInfo(driver!!, "highLowClickEnable", "After click high and low alarm.")
+
+
+        val buttonApply ="${targetPackageName}:id/btn_apply"
+        scrollToId(driver!!,buttonApply)
+        driver!!.findElement(By.ById(buttonApply)).click()
+
+        ParseUtil.parseAIPageLog("AI page log:", extentTest)
+
+        extentTest.log(Status.PASS,"pass.")
+    }
+
+    @Test
+    fun rtdPage(){
+        val wait = WebDriverWait(driver?.let { it }, 10)
+        val extentTest: ExtentTest = extent!!.createTest("RTD")
+
+        val relayText = "${targetPackageName}:id/txt_relay"
+        scrollToId(driver!!,relayText)
+        wait.untilViewLoad(relayText)
+
+        Thread.sleep(1500)
+
+        val buttonSetting = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[4]/android.widget.LinearLayout[1]/android.widget.ImageView"
+        wait.untilXpath(buttonSetting)
+        driver!!.findElement(By.ByXPath(buttonSetting)).click()
+        extentTest.screenshotInfo(driver!!, "rtdPage", "RTD config page.")
+
+        val switchEnable ="${targetPackageName}:id/swt_enable"
+        driver!!.findElement(By.ById(switchEnable)).click()
+
+
+
+        extentTest.screenshotInfo(driver!!, "rtdClickEnable", "After click enable.")
+
+        val switchHighEnable ="${targetPackageName}:id/swt_high_enable"
+        val switchLowEnable ="${targetPackageName}:id/swt_low_enable"
+        val editTextLowAlarm ="${targetPackageName}:id/edt_low_alarm"
+        wait.untilViewLoad(switchHighEnable)
+        driver!!.findElement(By.ById(switchHighEnable)).click()
+        driver!!.findElement(By.ById(switchLowEnable)).click()
+
+        val buttonApply ="${targetPackageName}:id/btn_apply"
+        scrollToId(driver!!,buttonApply)
+
+        wait.untilViewLoad(editTextLowAlarm)
+        extentTest.screenshotInfo(driver!!, "alarmRTDClick", "After click high and low alarm.")
+
+        Thread.sleep(2000)
+        driver!!.findElement(By.ById(buttonApply)).click()
+
+
+        ParseUtil.parseRTDPageLog("RTD page log:", extentTest)
+
+        extentTest.log(Status.PASS,"pass.")
+    }
+    @Test
     fun navigationBarPage() {
         val wait = WebDriverWait(driver?.let { it }, 10)
         val extentTest: ExtentTest = extent!!.createTest("Navigation bar")
@@ -499,7 +707,7 @@ class WMReportTest: BaseExtentReportTest() {
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
 
         wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        extentTest.screenshotInfo(driver!!,"navigationBar","After click navigation bar button.")
+        extentTest.screenshotInfo(driver!!,"bar","After click navigation bar button.")
 
         val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
         mutableListOf<DrawerPageData>().apply {
@@ -521,7 +729,7 @@ class WMReportTest: BaseExtentReportTest() {
 
     @Test
     fun deviceInfoPage() {
-        val wait = WebDriverWait(driver?.let { it }, 10)
+        val wait = WebDriverWait(driver?.let { it }, 40)
         val extentTest: ExtentTest = extent!!.createTest("DeviceInfo")
         val textName = "${targetPackageName}:id/txt_name"
         val textInfo = "${targetPackageName}:id/txt_info"
@@ -575,6 +783,7 @@ class WMReportTest: BaseExtentReportTest() {
 
         wait.untilViewLoad(buttonEdit)
 //        ParseUtil.parseDeviceInfoTestLog("Device Info log :", extentTest)
+        ParseUtil.parseDeviceInfoTestLog("DeviceInfo log:", extentTest)
 
         extentTest.pass("Reset Device Name pass.")
         extentTest.pass("Reset Password pass.")
@@ -654,16 +863,16 @@ class WMReportTest: BaseExtentReportTest() {
         Thread.sleep(5000)
         if (list != null && list.size >0) {
 
-            wait.waitForVisibleByText(driver!!, By.id(itemTextID), "WM_willy_test", 10)
+            wait.waitForVisibleByText(driver!!, By.id(itemTextID), targetBLEDevice, 10)
 
             list.forEach {
-                if (it.findElement(By.id(itemTextID)).text == "WM_willy_test") {
+                if (it.findElement(By.id(itemTextID)).text == targetBLEDevice) {
                     it.click()
                     return@forEach
                 }
             }
         } else {
-            extentTest.fail("Can not find ble device !")
+//            extentTest.fail("Can not find ble device !")
         }
 
 
@@ -715,7 +924,7 @@ class WMReportTest: BaseExtentReportTest() {
     @Test
     fun gateWayPage() {
         val wait = WebDriverWait(driver?.let { it }, 10)
-        val extentTest: ExtentTest = extent!!.createTest("GateWay")
+        val extentTest: ExtentTest = extent!!.createTest("Gateway")
         val buttonEnable = "${targetPackageName}:id/btn_Enable"
         val loEnable = "${targetPackageName}:id/LO_Enable"
 
@@ -725,7 +934,12 @@ class WMReportTest: BaseExtentReportTest() {
         val terminalBlockLayout = "${targetPackageName}:id/action_bar_root"
         wait.untilViewLoad(terminalBlockLayout)
         Thread.sleep(1000)
-        driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
+
+
+        /** after rtu setting */
+        driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"開啟導覽匣\"]")?.click()
+        /** normal */
+//        driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
         wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
         val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
         listDrawerPage?.get(2)?.click()
@@ -865,7 +1079,7 @@ class WMReportTest: BaseExtentReportTest() {
         deviceInfoList.forEach {
             extentTest.info("${it.findElement(By.id(textName)).text}： ${it.findElement(By.id(textInfo)).text}")
         }
-//        ParseUtil.parseCloudSettingTestLog("Cloud setting log :", extentTest)
+        ParseUtil.parseCloudSettingTestLog("Cloud setting log :", extentTest)
 
 
     }
@@ -979,7 +1193,7 @@ class WMReportTest: BaseExtentReportTest() {
         }
 
 
-
+        Thread.sleep(1200)
         wait.untilViewLoad(listTable)
         driver!!.findElement(By.id(buttonEdit)).click()
 
@@ -1006,26 +1220,10 @@ class WMReportTest: BaseExtentReportTest() {
 //        wait.untilViewLoad(listTable)
 
 
-//        ParseUtil.parseNetworkStatusTestLog("Network setting log :", extentTest)
+        ParseUtil.parseNetworkStatusLog("Network status log :", extentTest)
 
 
 
-    }
-    private fun forceModePage(extentTest: ExtentTest) {
-        val wait = WebDriverWait(driver?.let { it }, 10)
-
-        val buttonForce = "${targetPackageName}:id/btn_force"
-        val textForce = "${targetPackageName}:id/txt_force"
-        wait.untilViewLoad(buttonForce)
-        driver!!.findElement(By.id(buttonForce)).click()
-        wait.untilViewLoad(textForce)
-        extentTest.screenshotInfo(driver!!,"forceModePage","Force mode page.")
-
-
-        val textRtd = "${targetPackageName}:id/txt_relay"
-        scrollToId(driver!!,textRtd)
-        wait.untilViewLoad(textRtd)
-        extentTest.screenshotInfo(driver!!, "relayTextForce", "Scroll to Relay text.")
     }
     private fun MutableList<TerminalBlockData>.insertTerminalData(subjectId: String, listXPath: String, addLambda: (mobileElement: MobileElement) -> TerminalBlockMember) {
 
