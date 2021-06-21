@@ -7,7 +7,9 @@ import com.oring.oring_wm_ui_test.apkTest.util.DateUtil
 import io.appium.java_client.MobileBy
 import org.junit.Test
 import org.openqa.selenium.By
+import org.openqa.selenium.Keys
 import org.openqa.selenium.remote.DesiredCapabilities
+import org.openqa.selenium.support.events.EventFiringWebDriver
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.lang.Exception
 
@@ -44,11 +46,16 @@ class IOSWMReportTest : BaseExtentReportTest() {
         navigatorBarTest()
         deviceInfoTest()
         cloudSettingTest()
-//        lteConnectionStatusTest()
-//        remoteControlTest()
-//        reportingIntervalTest()
+        lteConnectionStatusTest()
+        remoteControlTest()
         gateWayTest()
 //        captureLogcat()
+
+
+
+
+
+//        reportingIntervalTest()
     }
 
     @Test
@@ -72,23 +79,18 @@ class IOSWMReportTest : BaseExtentReportTest() {
         val wait = WebDriverWait(driver?.let { it }, 10)
         val extentTest: ExtentTest = extent!!.createTest("Device")
 
-        val deviceTitle = "//XCUIElementTypeOther[@name=\"My device\"]"
-        val elementCell = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell"
         val deviceTable = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable"
+        val targetDeviceId = "WM_iot_test09"
         Thread.sleep(1500)
         wait.untilXpath(deviceTable)
         extentTest.screenshotInfo(driver!!, "DeviceList", "Device list page.")
-//        Thread.sleep(3000)
 
-        wait.untilIosClassChain(elementCell)
-        val deviceList = driver?.findElements(MobileBy.iOSClassChain(elementCell))
+        Thread.sleep(1800)
 
-        println("deviceList : ${deviceList?.size}")
 
-        deviceList?.forEachIndexed { indexA, mobileElement ->
-            println("indexA : $indexA")
-            mobileElement.click()
-        }
+
+        val targetDeviceItem = driver?.findElement(By.id(targetDeviceId))
+        targetDeviceItem?.click()
 
         val checkDialog = "**/XCUIElementTypeAlert[`label == \"Connection\"`]/XCUIElementTypeOther"
         val cancel = "**/XCUIElementTypeAlert[`label == \"Connection\"`]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeScrollView[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[1]"
@@ -97,6 +99,34 @@ class IOSWMReportTest : BaseExtentReportTest() {
         extentTest.screenshotInfo(driver!!, "DeviceConfirm", "Confirm if connect this device.")
 
         driver?.findElement(MobileBy.iOSClassChain(connect))?.click()
+
+
+        /** Set new password */
+
+        val setPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTextField[1]"
+        val setVerifyPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTextField[2]"
+        val applyButton = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
+
+        wait.untilIosClassChain(setPassword)
+        extentTest.screenshotInfo(driver!!, "newPasswordInput", "Set new password page.")
+        driver?.findElement(MobileBy.iOSClassChain(setPassword))?.sendKeys("123456")
+        driver?.findElement(MobileBy.iOSClassChain(setVerifyPassword))?.sendKeys("123456")
+        extentTest.screenshotInfo(driver!!, "afterNewPasswordInput", "After input new password.")
+        Thread.sleep(1100)
+        driver?.findElement(By.name("Done"))?.click()
+        driver?.findElement(MobileBy.iOSClassChain(applyButton))?.click()
+
+
+        /** Set new password */
+
+        wait.untilXpath(deviceTable)
+        Thread.sleep(10000)
+        val targetDeviceItem2 = driver?.findElement(By.id(targetDeviceId))
+        targetDeviceItem2?.click()
+        wait.untilIosClassChain(checkDialog)
+        driver?.findElement(MobileBy.iOSClassChain(connect))?.click()
+        /** Set new password  plus*/
+
 
         val passwordAlert ="**/XCUIElementTypeAlert[`label == \"WM_iot_test09\"`]"
         val login = "**/XCUIElementTypeAlert[`label == \"WM_iot_test09\"`]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeScrollView[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[3]"
@@ -156,8 +186,6 @@ class IOSWMReportTest : BaseExtentReportTest() {
 
 
         val listNavigatorItem = driver?.findElements(By.xpath(barItemXpath))
-        println("sssss")
-        println("item size : ${listNavigatorItem?.size}")
         listNavigatorItem?.get(0)?.click()
 
 //        val hardwareVersion = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[8]/XCUIElementTypeOther[1]/XCUIElementTypeOther"
@@ -183,6 +211,20 @@ class IOSWMReportTest : BaseExtentReportTest() {
         driver?.findElement(MobileBy.iOSClassChain(editTextAliveTime))?.sendKeys("30")
         extentTest.screenshotInfo(driver!!, "AfterDeviceInfoPWInput", "After input edited text.")
 
+
+        /**
+         *
+         *
+         * */
+        extentTest.log(Status.FAIL ,"After edited and input device name and alive time always get crash.")
+        extentTest.log(Status.FAIL ,"Reset new password always get crash when input and apply new password.")
+        val tempCloseButton = "**/XCUIElementTypeButton[`label == \"closeButton\"`]"
+        driver?.findElement(MobileBy.iOSClassChain(tempCloseButton))?.click()
+        Thread.sleep(15000)
+
+        driver?.findElement(MobileBy.iOSClassChain(tempCloseButton))?.click()
+
+        return
         driver?.findElement(MobileBy.iOSClassChain(applyButton))?.click()
         println("deviceInfoTest :After click applyButton")
 
@@ -237,8 +279,6 @@ class IOSWMReportTest : BaseExtentReportTest() {
 
 
         val listNavigatorItem = driver?.findElements(By.xpath(barItemXpath))
-        println("sssss")
-        println("item size : ${listNavigatorItem?.size}")
         listNavigatorItem?.get(1)?.click()
 
         val cloudSettingPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[6]/XCUIElementTypeOther[1]/XCUIElementTypeOther"
@@ -261,17 +301,20 @@ class IOSWMReportTest : BaseExtentReportTest() {
         val brokerPort = "**/XCUIElementTypeTextField[`value == \"1233\"`]"
 
         val applyButton = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
+        val closeButton = "**/XCUIElementTypeButton[`label == \"closeButton\"`]"
+
         Thread.sleep(4000)
 
-        driver?.findElement(MobileBy.iOSClassChain(applyButton))?.click()
+        driver?.findElement(MobileBy.iOSClassChain(closeButton))?.click()
+//        driver?.findElement(MobileBy.iOSClassChain(applyButton))?.click()
         wait.untilIosClassChain(cloudSettingPassword)
         Thread.sleep(16000)
 
         extentTest.screenshotInfo(driver!!, "AfterCloudSetting", "After setting edited.")
 
-        val closeButton = "**/XCUIElementTypeButton[`label == \"closeButton\"`]"
         driver?.findElement(MobileBy.iOSClassChain(closeButton))?.click()
-        extentTest.log(Status.PASS, "pass.")
+//        extentTest.log(Status.PASS, "pass.")
+        extentTest.log(Status.FAIL, "After click apply button on cloud setting always get crash.")
 
     }
 
@@ -283,6 +326,10 @@ class IOSWMReportTest : BaseExtentReportTest() {
         val barNavigator = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.MenuView\"`][1]"
         val barMeanButton = "**/XCUIElementTypeButton[`label == \"menu\"`]"
         val barItemXpath = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell"
+
+        extentTest.log(Status.FAIL, "After click side navigation page's connect status always get crash.")
+        return
+
 
         wait.untilIosClassChain(barLayout)
         driver?.findElement(MobileBy.iOSClassChain(barMeanButton))?.click()
@@ -334,19 +381,42 @@ class IOSWMReportTest : BaseExtentReportTest() {
         val barItemXpath = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell"
 
         wait.untilIosClassChain(barLayout)
-//        driver?.findElement(MobileBy.iOSClassChain(barMeanButton))?.click()
+        driver?.findElement(MobileBy.iOSClassChain(barMeanButton))?.click()
 
-//        wait.untilIosClassChain(barNavigator)
-
-
-
-//        val listNavigatorItem = driver?.findElements(By.xpath(barItemXpath))
-//        println("sssss")
-//        println("item size : ${listNavigatorItem?.size}")
-//        listNavigatorItem?.get(4)?.click()
+        val listNavigatorItem = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem?.get(4)?.click()
 //
-//        extentTest.screenshotInfo(driver!!, "RemoteControl", "Remote control page.")
-        extentTest.log(Status.WARNING,"Remote control page show nothing.")
+        Thread.sleep(5000)
+        extentTest.screenshotInfo(driver!!, "RemoteControl", "Remote control web page.")
+
+        val webOrgName = "**/XCUIElementTypeTextField[`label == \"Organization name\"`]"
+        val webEmail = "**/XCUIElementTypeTextField[`label == \"Email\"`]"
+        val webPassword = "**/XCUIElementTypeSecureTextField[`label == \"Password\"`]"
+        val webLogin = "**/XCUIElementTypeButton[`label == \"Login\"`]"
+
+        wait.untilIosClassChain(webLogin)
+        driver!!.findElement(MobileBy.iOSClassChain(webOrgName)).click()
+        Thread.sleep(2000)
+        driver!!.findElement(MobileBy.iOSClassChain(webOrgName)).sendKeys("iot-terminal-block")
+        driver!!.findElement(MobileBy.iOSClassChain(webEmail)).click()
+        Thread.sleep(2000)
+        driver!!.findElement(MobileBy.iOSClassChain(webEmail)).sendKeys("iot-terminal-block@weidmuller.com")
+        driver!!.findElement(MobileBy.iOSClassChain(webPassword)).click()
+        Thread.sleep(2000)
+        driver!!.findElement(MobileBy.iOSClassChain(webPassword)).sendKeys("DQwp4hTqbyN8")
+        Thread.sleep(2000)
+        driver!!.findElement(MobileBy.iOSClassChain(webLogin)).click()
+        Thread.sleep(2000)
+
+        wait.untilIosClassChain(barLayout)
+        driver?.findElement(MobileBy.iOSClassChain(barMeanButton))?.click()
+        extentTest.log(Status.PASS,"Pass")
+
+        val listNavigatorItem2 = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem2?.get(4)?.click()
+        Thread.sleep(5000)
+        extentTest.screenshotInfo(driver!!, "remoteControlList", "Remote control list page.")
+
 //        driver?.navigate()?.back()
 
     }
@@ -425,6 +495,8 @@ class IOSWMReportTest : BaseExtentReportTest() {
         /**Rtu  */
         val rtuCancelButton = "**/XCUIElementTypeButton[`label == \"CANCEL\"`]"
         val rtuApplyButton = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
+        val rtuBack = "**/XCUIElementTypeButton[`label == \"Modbus RTU\"`]"
+
 
         try {
             wait.untilIosClassChain(settingButton)
@@ -441,14 +513,21 @@ class IOSWMReportTest : BaseExtentReportTest() {
 //            Thread.sleep(1000)
 
             driver?.findElement(MobileBy.iOSClassChain(settingApplyButton))?.click()
+
             Thread.sleep(12000)
+
 
             /**RTU */
             driver?.findElement(MobileBy.iOSClassChain(rtuConfigButton))?.click()
+
             wait.untilIosClassChain(rtuApplyButton)
             Thread.sleep(1500)
             extentTest.screenshotInfo(driver!!, "RtuConfig", "Rtu configuration page.")
-            driver?.findElement(MobileBy.iOSClassChain(rtuApplyButton))?.click()
+//            driver?.findElement(MobileBy.iOSClassChain(rtuApplyButton))?.click()
+            extentTest.log(Status.FAIL, "After click apply button on Slave RTU setting always get crash.")
+            driver?.findElement(MobileBy.iOSClassChain(rtuBack))?.click()
+            return
+            driver?.findElement(MobileBy.iOSClassChain(rtuCancelButton))?.click()
             Thread.sleep(1500)
 
 

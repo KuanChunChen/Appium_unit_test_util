@@ -27,6 +27,13 @@ private fun screenShot(driver: AndroidDriver<MobileElement>?, saveDir: String){
     FileUtils.copyFile(screenshot, File(saveDir))
 }
 
+private fun screenShot(driver: IOSDriver<MobileElement>?, saveDir: String){
+//    val screenshot: File = driver!!.getScreenshotAs(OutputType.FILE)
+    val screenshot = (driver as TakesScreenshot).getScreenshotAs(OutputType.FILE)
+    FileUtils.copyFile(screenshot, File(saveDir))
+}
+
+
 fun ExtentTest.screenshotPass(driver: AndroidDriver<MobileElement>?, fileName: String, message: String) {
 
     val saveDir = "$screenShotsDir$fileName.png"
@@ -44,6 +51,17 @@ fun ExtentTest.screenshotInfo(driver: AndroidDriver<MobileElement>?, fileName: S
 //    info(message).addScreenCaptureFromPath(saveDir)
     info(message, MediaEntityBuilder.createScreenCaptureFromPath(saveDir).build())
 }
+
+fun ExtentTest.screenshotInfo(driver: IOSDriver<MobileElement>?, fileName: String, message: String) {
+    val saveDir = "$screenShotsDir$fileName.png"
+
+
+    screenShot(driver, saveDir)
+//    addScreenCaptureFromPath(saveDir)
+//    info(message).addScreenCaptureFromPath(saveDir)
+    info(message, MediaEntityBuilder.createScreenCaptureFromPath(saveDir).build())
+}
+
 
 fun WebDriverWait.untilViewLoad(viewID: String): WebElement {
     return this.until(ExpectedConditions.presenceOfElementLocated(MobileBy.id(viewID)))
@@ -111,7 +129,7 @@ fun scrollToText(driver: AndroidDriver<MobileElement>, text: String) {
             + "new UiSelector().scrollable(true)).scrollIntoView(" + "new UiSelector().text(\"" + text + "\"));")
 }
 
-fun iosScrollToText(driver: AndroidDriver<MobileElement>, elementName: String, findClassName: String) {
+fun iosScrollToName(driver: AndroidDriver<MobileElement>, elementName: String, findClassName: String) {
     val parent = driver.findElement(By.className(findClassName)) as RemoteWebElement
     val parentID = parent.id
     val scrollObject = HashMap<String, String>()
@@ -155,6 +173,14 @@ fun tapItemByDescription(driver: AndroidDriver<MobileElement>, text: String) {
 }
 
 fun scrollToDown(driver: AndroidDriver<MobileElement>) {
+
+    val js = driver as JavascriptExecutor
+    val scrollObject = HashMap<String, String>()
+    scrollObject["direction"] = "down"
+    js.executeScript("mobile: scroll", scrollObject)
+}
+
+fun scrollToDown(driver: IOSDriver<MobileElement>) {
 
     val js = driver as JavascriptExecutor
     val scrollObject = HashMap<String, String>()
