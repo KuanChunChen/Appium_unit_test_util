@@ -13,8 +13,8 @@ import java.net.URL
 
 open class BaseExtentReportTest  {
 
-//    protected var driver: AndroidDriver<MobileElement>? = null
-    protected var driver: IOSDriver<MobileElement>? = null
+    protected var driver: AndroidDriver<MobileElement>? = null
+//    protected var driver: IOSDriver<MobileElement>? = null
     protected open var capabilities: DesiredCapabilities? = null
     private val webDriverURL: URL = URL("http://127.0.0.1:4723/wd/hub")
     protected open var extent: ExtentReports? = null
@@ -25,8 +25,8 @@ open class BaseExtentReportTest  {
     @Before
     fun setUp() {
         println("before ,${Gson().toJson(capabilities)} ")
-//        this.driver = AndroidDriver(webDriverURL, capabilities)
-        this.driver = IOSDriver(webDriverURL, capabilities)
+        this.driver = AndroidDriver(webDriverURL, capabilities)
+//        this.driver = IOSDriver(webDriverURL, capabilities)
         this.extent = ExtentReports().apply {
             attachReporter(ExtentSparkReporter(System.getProperty("user.dir") + "//auto_test//reports//evt.html"))
         }

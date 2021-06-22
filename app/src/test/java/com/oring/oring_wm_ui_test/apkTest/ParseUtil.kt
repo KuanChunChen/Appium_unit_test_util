@@ -2,6 +2,7 @@ package com.oring.oring_wm_ui_test.apkTest
 
 import com.aventstack.extentreports.ExtentTest
 import com.aventstack.extentreports.Status
+import com.aventstack.extentreports.markuputils.MarkupHelper
 import com.google.gson.Gson
 import com.oring.oring_wm_ui_test.apkTest.constants.LogName
 import com.oring.oring_wm_ui_test.apkTest.model.LogCatchModel
@@ -16,16 +17,17 @@ object ParseUtil {
 
     private fun parseLogName(scenario: (logCatchModel: LogCatchModel) -> Unit) {
 
-        val listLog = readLogCatMessage(System.getProperty("user.dir") + "/auto_test/logCatcher/wn_log.txt")
+        val listLog =
+            readLogCatMessage(System.getProperty("user.dir") + "/auto_test/logCatcher/wn_log.txt")
         listLog.forEach {
             scenario(it)
         }
     }
 
-    fun parseLoginTestLog(targetName: String, extentTest: ExtentTest){
+    fun parseLoginTestLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        parseLogName {
             when (it.logName) {
                 LogName.FastBle,
                 LogName.BluetoothGatt,
@@ -37,142 +39,182 @@ object ParseUtil {
 
     }
 
-    fun parseDashboardTestLog(targetName: String, extentTest: ExtentTest){
+    fun parseDashboardTestLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
             when (it.logName) {
 
-                LogName.Dashboard-> {
-                    node.log(Status.INFO, it.totalMessage)
+                LogName.Dashboard -> {
+                    targetList.add(replaceLogTag(it.totalMessage!!))
+
                 }
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
 
     }
 
-    fun parseDashboardIOTestLog(targetName: String, extentTest: ExtentTest){
+    fun parseDashboardIOTestLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
             when (it.logName) {
                 LogName.dashboardIO -> {
-                    node.log(Status.INFO, it.totalMessage)
+                    targetList.add(replaceLogTag(it.totalMessage!!))
                 }
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
 
     }
 
-    fun parseForceModeLog(targetName: String, extentTest: ExtentTest){
+    fun parseForceModeLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
             when (it.logName) {
 
-                LogName.ForcingPage-> {
-                    node.log(Status.INFO, it.totalMessage)
+                LogName.ForcingPage -> {
+                    targetList.add(replaceLogTag(it.totalMessage!!))
                 }
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
 
     }
 
 
-    fun parseDOPageLog(targetName: String, extentTest: ExtentTest){
+    fun parseDOPageLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
             when (it.logName) {
 
-                LogName.DoPage-> {
-                    node.log(Status.INFO, it.totalMessage)
+                LogName.DoPage -> {
+                    targetList.add(replaceLogTag(it.totalMessage!!))
                 }
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
 
     }
 
-    fun parseDIPageLog(targetName: String, extentTest: ExtentTest){
+    fun parseDIPageLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
             when (it.logName) {
 
-                LogName.DiPage-> {
-                    node.log(Status.INFO, it.totalMessage)
+                LogName.DiPage -> {
+                    targetList.add(replaceLogTag(it.totalMessage!!))
                 }
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
 
     }
 
 
-    fun parseAIPageLog(targetName: String, extentTest: ExtentTest){
+    fun parseAIPageLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
             when (it.logName) {
 
-                LogName.AiPage-> {
-                    node.log(Status.INFO, it.totalMessage)
+                LogName.AiPage -> {
+                    targetList.add(replaceLogTag(it.totalMessage!!))
                 }
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
 
     }
 
-    fun parseRTDPageLog(targetName: String, extentTest: ExtentTest){
+    fun parseRTDPageLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
             when (it.logName) {
 
-                LogName.RTDPage-> {
-                    node.log(Status.INFO, it.totalMessage)
+                LogName.RTDPage -> {
+                    targetList.add(replaceLogTag(it.totalMessage!!))
                 }
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
 
     }
 
-    fun parseNetworkStatusLog(targetName: String, extentTest: ExtentTest){
+    fun parseNetworkStatusLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
             when (it.logName) {
 
-                LogName.NetworkStatus-> {
-                    node.log(Status.INFO, it.totalMessage)
+                LogName.NetworkStatus -> {
+                    targetList.add(replaceLogTag(it.totalMessage!!))
                 }
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
 
     }
 
 
-    fun parseCloudSettingTestLog(targetName: String, extentTest: ExtentTest){
+    fun parseCloudSettingTestLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
             when (it.logName) {
 
-                LogName.CloudSetting-> {
-                    node.log(Status.INFO, it.totalMessage)
+                LogName.CloudSetting -> {
+                    targetList.add(replaceLogTag(it.totalMessage!!))
                 }
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
 
     }
-    fun parseDeviceInfoTestLog(targetName: String, extentTest: ExtentTest){
+
+    fun parseDeviceInfoTestLog(targetName: String, extentTest: ExtentTest) {
 
         val node = extentTest.createNode(targetName)
-        parseLogName{
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
             if (it.logName != null && it.logName!!.contains(LogName.DeviceInfo)) {
-                node.log(Status.INFO, it.totalMessage)
-
+                targetList.add(replaceLogTag(it.totalMessage!!))
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
+
+
+    }
+
+    private fun replaceLogTag(input: String): String {
+
+        return input
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
 
     }
 
@@ -181,11 +223,14 @@ object ParseUtil {
     fun parseGateWayTestLog(targetName: String, extentTest: ExtentTest){
 
         val node = extentTest.createNode(targetName)
+        val targetList = mutableListOf<String>()
+
         parseLogName{
-            if (it.logName != null && it.logName!!.contains("GatewayTest")) {
-                node.log(Status.INFO, it.logName + ":" + it.message)
+            if (it.logName != null && it.logName!!.contains(LogName.Gateway)) {
+                targetList.add(replaceLogTag(it.totalMessage!!))
             }
         }
+        node.info(MarkupHelper.createOrderedList(targetList))
 
     }
 
@@ -260,7 +305,7 @@ object ParseUtil {
         val TTTIII: ExtentTest = extentTest.createNode(LogName.TTTIII)
         val chatty: ExtentTest = extentTest.createNode(LogName.chatty)
         val DataBits: ExtentTest = extentTest.createNode(LogName.DataBits)
-        val GatewayTest: ExtentTest = extentTest.createNode(LogName.GatewayTest)
+        val GatewayTest: ExtentTest = extentTest.createNode(LogName.Gateway)
         val Listenable: ExtentTest = extentTest.createNode(LogName.Listenable)
         val Req_Enable: ExtentTest = extentTest.createNode(LogName.Req_Enable)
         val BitShift: ExtentTest = extentTest.createNode(LogName.BitShift)
@@ -472,7 +517,7 @@ object ParseUtil {
                 LogName.DataBits->{
                     DataBits.log(Status.INFO,it.message)
                 }
-                LogName.GatewayTest->{
+                LogName.Gateway->{
                     GatewayTest.log(Status.INFO,it.message)
                 }
                 LogName.Listenable->{

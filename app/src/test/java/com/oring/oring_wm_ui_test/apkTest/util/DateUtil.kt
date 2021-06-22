@@ -9,4 +9,10 @@ object DateUtil {
             LocalDateTime.now()
                     .format(DateTimeFormatter
                             .ofPattern("yyyyMMddHHmm"))
+
+    fun getCurrentDateCustom(): String? =
+        LocalDateTime.now()
+            .format(DateTimeFormatter
+                .ofPattern("yyMMdd"))
+
 }

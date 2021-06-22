@@ -70,7 +70,7 @@ object LogName {
 
     const val chatty = "chatty"
     const val DataBits = "DataBits"
-    const val GatewayTest = "GatewayTest"
+    const val Gateway = "Gateway"
     const val Listenable = "Listenable"
     const val Req_Enable = "Req_Enable"
     const val BitShift = "BitShift"
