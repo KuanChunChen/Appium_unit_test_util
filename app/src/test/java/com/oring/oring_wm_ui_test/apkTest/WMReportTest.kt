@@ -96,30 +96,30 @@ class WMReportTest: BaseExtentReportTest() {
         /*** BluetoothAdapter* */
         deviceListTest()
         /*** FastBle*  BluetoothGatt CreateTest*/
-        singUpNewDeviceTest()
+//        singUpNewDeviceTest()
         loginTest()
-        navigationBarPage()
+//        navigationBarPage()
 ////
 ////
 ////        /*** SP_SW  EEWW    DashboardTest AI_value AI_raw RTD_mode finish*/
-        dashboardPage()
+//        dashboardPage()
         dashboardIOPage()
-        forceModePage()
-        diPage()
-        doPage()
-        aiPage()
+//        forceModePage()
+//        diPage()
+//        doPage()
+//        aiPage()
         rtdPage()
 ////////        /**GatewayTest */
-        gateWayPage()
-        deviceInfoPage()
-//////        /*** Cloud CS_Info CloudSetting HEX*/
-        networkStatusPage()
-        cloudSettingPage()
-        remoteControl()
+//        gateWayPage()
+//        deviceInfoPage()
+////////        /*** Cloud CS_Info CloudSetting HEX*/
+//        networkStatusPage()
+//        cloudSettingPage()
+//        remoteControl()
         /**
          * MiniDump
          * */
-        reLoginAfterResetPassword()
+//        reLoginAfterResetPassword()
 
     }
 
@@ -652,13 +652,14 @@ class WMReportTest: BaseExtentReportTest() {
         scrollToId(driver!!,relayText)
         wait.untilViewLoad(relayText)
 
-        Thread.sleep(1500)
+        Thread.sleep(3500)
 
-        val aiZeroXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[3]/android.widget.LinearLayout[1]"
-        wait.untilXpath(aiZeroXpath)
-        val layout = driver!!.findElement(By.ByXPath(aiZeroXpath))
+        val aiTable = "${targetPackageName}:id/ai_table"
+
+        wait.untilViewLoad(aiTable)
+        val layout = driver!!.findElements(By.id(aiTable))
         val imageID = "${targetPackageName}:id/img_config"
-        layout.findElement(By.id(imageID)).click()
+        layout[0].findElement(By.id(imageID)).click()
         extentTest.screenshotInfo(driver!!, "aiPage", "AI config page.")
 
         val switchEnable ="${targetPackageName}:id/swt_enable"
@@ -697,10 +698,11 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(relayText)
 
         Thread.sleep(1500)
+        val rtdTable = "${targetPackageName}:id/rtd_table"
+        val imageID = "${targetPackageName}:id/img_config"
 
-        val buttonSetting = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[4]/android.widget.LinearLayout[1]/android.widget.ImageView"
-        wait.untilXpath(buttonSetting)
-        driver!!.findElement(By.ByXPath(buttonSetting)).click()
+        wait.untilViewLoad(rtdTable)
+        driver!!.findElements(By.id(rtdTable))[0].findElement(By.id(imageID)).click()
         extentTest.screenshotInfo(driver!!, "rtdPage", "RTD config page.")
 
         val switchEnable ="${targetPackageName}:id/swt_enable"
