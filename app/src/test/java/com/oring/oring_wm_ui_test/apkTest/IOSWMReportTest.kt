@@ -79,9 +79,9 @@ class IOSWMReportTest : BaseExtentReportTest() {
     @Test
     fun startPageTest(){
         val wait = WebDriverWait(driver?.let { it }, 10)
-        val extentTest: ExtentTest = extent!!.createTest("Device")
+        val extentTest: ExtentTest = extent!!.createTest("Start")
 
-        val startButton = "**/XCUIElementTypeButton[`label == \"BLUETOOTH\"`]"
+        val startButton = "**/XCUIElementTypeButton[`label == \"START\"`]"
         wait.untilIosClassChain(startButton)
         extentTest.screenshotInfo(driver!!, "startPage", "Start page.")
         driver?.findElement(MobileBy.iOSClassChain(startButton))?.click()
@@ -119,28 +119,28 @@ class IOSWMReportTest : BaseExtentReportTest() {
 
         /** Set new password */
 //
-        val setPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTextField[1]"
-        val setVerifyPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTextField[2]"
-        val applyButton = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
-
-        wait.untilIosClassChain(setPassword)
-        extentTest.screenshotInfo(driver!!, "newPasswordInput", "Set new password page.")
-        driver?.findElement(MobileBy.iOSClassChain(setPassword))?.sendKeys("123456")
-        driver?.findElement(MobileBy.iOSClassChain(setVerifyPassword))?.sendKeys("123456")
-        extentTest.screenshotInfo(driver!!, "afterNewPasswordInput", "After input new password.")
-        Thread.sleep(1100)
-        driver?.findElement(By.name("Done"))?.click()
-        driver?.findElement(MobileBy.iOSClassChain(applyButton))?.click()
+//        val setPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTextField[1]"
+//        val setVerifyPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTextField[2]"
+//        val applyButton = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
+//
+//        wait.untilIosClassChain(setPassword)
+//        extentTest.screenshotInfo(driver!!, "newPasswordInput", "Set new password page.")
+//        driver?.findElement(MobileBy.iOSClassChain(setPassword))?.sendKeys("123456")
+//        driver?.findElement(MobileBy.iOSClassChain(setVerifyPassword))?.sendKeys("123456")
+//        extentTest.screenshotInfo(driver!!, "afterNewPasswordInput", "After input new password.")
+//        Thread.sleep(1100)
+//        driver?.findElement(By.name("Done"))?.click()
+//        driver?.findElement(MobileBy.iOSClassChain(applyButton))?.click()
 
 
         /** Set new password */
 
-        wait.untilXpath(deviceTable)
-        Thread.sleep(10000)
-        val targetDeviceItem2 = driver?.findElement(By.id(targetDeviceId))
-        targetDeviceItem2?.click()
-        wait.untilIosClassChain(checkDialog)
-        driver?.findElement(MobileBy.iOSClassChain(connect))?.click()
+//        wait.untilXpath(deviceTable)
+//        Thread.sleep(10000)
+//        val targetDeviceItem2 = driver?.findElement(By.id(targetDeviceId))
+//        targetDeviceItem2?.click()
+//        wait.untilIosClassChain(checkDialog)
+//        driver?.findElement(MobileBy.iOSClassChain(connect))?.click()
         /** Set new password  plus*/
 
 
@@ -182,13 +182,14 @@ class IOSWMReportTest : BaseExtentReportTest() {
         scrollToDown(driver!!)
         extentTest.screenshotInfo(driver!!, "DashboardScroll", "After scroll.")
 
+        extentTest.log(Status.PASS, "Pass.")
 
     }
 
     @Test
     fun ioTest() {
         val wait = WebDriverWait(driver?.let { it }, 15)
-        val extentTest: ExtentTest = extent!!.createTest("Device information")
+        val extentTest: ExtentTest = extent!!.createTest("I/O")
         val barLayout = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.DeviceStatusView\"`]"
         val barNavigator = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.MenuView\"`][1]"
         val barMeanButton = "**/XCUIElementTypeButton[`label == \"menu\"`]"
@@ -281,21 +282,25 @@ class IOSWMReportTest : BaseExtentReportTest() {
 //        driver?.findElement(MobileBy.iOSClassChain(resetButton))?.click()
 //        println("deviceInfoTest :After click resetButton")
 //        val deviceName = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[2]/XCUIElementTypeTextField[1]"
-//        val newPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[2]/XCUIElementTypeTextField[2]"
-//        val verifyPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[2]/XCUIElementTypeTextField[3]"
+//        val newPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTextField[1]"
+//        val verifyPassword = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTextField[2]"
 //
 //        val resetApply = "**/XCUIElementTypeStaticText[`label == \"APPLY\"`]"
 //        val resetCancel = "**/XCUIElementTypeStaticText[`label == \"CANCEL\"`]"
         val closeButton = "**/XCUIElementTypeButton[`label == \"closeButton\"`]"
+////
+//        wait.untilIosClassChain(newPassword)
+//        extentTest.screenshotInfo(driver!!, "resetPasswordPage", "Reset password page.")
 //
-//        wait.untilIosClassChain(deviceName)
-//
-//        driver?.findElement(MobileBy.iOSClassChain(deviceName))?.sendKeys("123456")
+////        driver?.findElement(MobileBy.iOSClassChain(deviceName))?.sendKeys("123456")
 //        driver?.findElement(MobileBy.iOSClassChain(newPassword))?.sendKeys("123456")
 //        driver?.findElement(MobileBy.iOSClassChain(verifyPassword))?.sendKeys("123456")
+//        Thread.sleep(5000)
+
+//        extentTest.screenshotInfo(driver!!, "afterResetPasswordPage", "After reset password page.")
 //        try {
 //            driver?.findElement(MobileBy.iOSClassChain(resetApply))?.click()
-//            wait.untilIosClassChain(hardwareVersion)
+//            wait.untilIosClassChain(editButton)
 //
 //        } catch (e: Exception) {
 //            extentTest.log(Status.WARNING,"Reset password not work.")
@@ -403,6 +408,8 @@ class IOSWMReportTest : BaseExtentReportTest() {
             driver?.findElement(MobileBy.iOSClassChain(applyButton))?.click()
             wait.untilIosClassChain(bandConfigNB1)
             driver?.findElement(MobileBy.iOSClassChain(closeButton))?.click()
+            extentTest.log(Status.PASS,"Pass.")
+
         } catch (e: Exception) {
             extentTest.log(Status.WARNING,"Lte edit not work.")
             driver?.findElement(MobileBy.iOSClassChain(closeButton))?.click()
@@ -452,12 +459,14 @@ class IOSWMReportTest : BaseExtentReportTest() {
 
         wait.untilIosClassChain(barLayout)
         driver?.findElement(MobileBy.iOSClassChain(barMeanButton))?.click()
-        extentTest.log(Status.PASS,"Pass")
 
         val listNavigatorItem2 = driver?.findElements(By.xpath(barItemXpath))
         listNavigatorItem2?.get(5)?.click()
         Thread.sleep(5000)
         extentTest.screenshotInfo(driver!!, "remoteControlList", "Remote control list page.")
+
+
+        extentTest.log(Status.PASS,"Pass")
 
 //        driver?.navigate()?.back()
 
@@ -497,7 +506,7 @@ class IOSWMReportTest : BaseExtentReportTest() {
     @Test
     fun gateWayTest(){
         val wait = WebDriverWait(driver?.let { it }, 15)
-        val extentTest: ExtentTest = extent!!.createTest("GateWay")
+        val extentTest: ExtentTest = extent!!.createTest("Gateway")
         val barLayout = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.DeviceStatusView\"`]"
         val barNavigator = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.MenuView\"`][1]"
         val barMeanButton = "**/XCUIElementTypeButton[`label == \"menu\"`]"
