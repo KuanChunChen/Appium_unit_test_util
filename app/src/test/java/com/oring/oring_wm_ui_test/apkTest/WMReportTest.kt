@@ -96,30 +96,30 @@ class WMReportTest: BaseExtentReportTest() {
         /*** BluetoothAdapter* */
         deviceListTest()
         /*** FastBle*  BluetoothGatt CreateTest*/
-//        singUpNewDeviceTest()
+        singUpNewDeviceTest()
         loginTest()
-//        navigationBarPage()
+        navigationBarPage()
 ////
 ////
 ////        /*** SP_SW  EEWW    DashboardTest AI_value AI_raw RTD_mode finish*/
-//        dashboardPage()
+        dashboardPage()
         dashboardIOPage()
-//        forceModePage()
-//        diPage()
-//        doPage()
-//        aiPage()
+        forceModePage()
+        diPage()
+        doPage()
+        aiPage()
         rtdPage()
 ////////        /**GatewayTest */
-//        gateWayPage()
-//        deviceInfoPage()
+        gateWayPage()
+        deviceInfoPage()
 ////////        /*** Cloud CS_Info CloudSetting HEX*/
-//        networkStatusPage()
-//        cloudSettingPage()
-//        remoteControl()
+        networkStatusPage()
+        cloudSettingPage()
+        remoteControl()
         /**
          * MiniDump
          * */
-//        reLoginAfterResetPassword()
+        reLoginAfterResetPassword()
 
     }
 
