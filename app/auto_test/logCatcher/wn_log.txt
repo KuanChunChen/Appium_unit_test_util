@@ -81,7 +81,7 @@
 06-25 13:29:03.843   796   833 I BufferQueueProducer: [com.oringnet.wm/com.oring.LoginActivity@11439#0](this:0x72a4413800,id:19,api:1,p:11439,c:796) queueBuffer: fps=1.65 dur=1819.24 max=1664.41 min=25.71
 06-25 13:29:03.905 11439 11463 D Surface : Surface::disconnect(this=0x75e92a4000,api=1)
 06-25 13:29:03.905   796  2089 I BufferQueueProducer: [Toast@11439#0](this:0x72a4513000,id:20,api:1,p:11439,c:796) disconnect(P): api 1
-06-25 13:29:03.909 11439 11692 I FastBle : device detected  ------  name: WM_iot_test09  mac: 18:04:ED:6E:60:56  Rssi: -68  scanRecord: 02 01 06 11 06 9e ca dc 24 0e e5 a9 e0 93 f3 a3 b5 01 00 40 6e 06 ff 0d 00 c0 ff ee 15 09 57 4d 5f 69 6f 74 5f 74 65 73 74 30 39 00 00 00 00 00 00 00 05 12 50 00 20 03 02 0a 00 00 00 00
+06-25 13:29:03.909 11439 11692 I FastBle : device detected  ------  name: WM_  mac: 18:04:ED:6E:60:56  Rssi: -68  scanRecord: 02 01 06 11 06 9e ca dc 24 0e e5 a9 e0 93 f3 a3 b5 01 00 40 6e 06 ff 0d 00 c0 ff ee 15 09 57 4d 5f 69 6f 74 5f 74 65 73 74 30 39 00 00 00 00 00 00 00 05 12 50 00 20 03 02 0a 00 00 00 00
 06-25 13:29:03.914   796   796 I MiniDump: 0x72a441b000 |     DEVICE |          0 | 0.994 |    0    0  720 1600 |   0.0   0.0 720.0 1600.0 | com.oringnet.wm/com.oring.LoginActivity@11439#0
 06-25 13:29:03.914   796   796 I MiniDump: 0x72a44f5000 |     DEVICE |          0 | 0.232 |    0  384  720 1600 |   0.0   0.0 720.0 1216.0 | com.oringnet.wm/com.oring.ble.BLEScanActivity@11439#0
 06-25 13:29:03.914   796   796 I MiniDump: 0x72a4427000 |     DEVICE |          0 | 0.990 |  217 1460  502 1530 |   0.0   0.0 285.0  70.0 | Toast@11439#0
@@ -125,7 +125,7 @@
 06-25 13:29:08.209 11439 11439 D PhoneWindow: windowLightStatusBar : false, disable View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 06-25 13:29:08.223 11439 11439 I TouchFilterInputStageHelper: [needTouchEventFilter] Displayid : 0
 06-25 13:29:08.225 11439 11439 D BezellessGripSuppressionFilter: getdisplaysize, x : 720 y : 1600
-06-25 13:29:08.231 11439 11439 I FastBle : connect device: WM_iot_test09
+06-25 13:29:08.231 11439 11439 I FastBle : connect device: WM_
 06-25 13:29:08.231 11439 11439 I FastBle : mac: 18:04:ED:6E:60:56
 06-25 13:29:08.231 11439 11439 I FastBle : autoConnect: false
 06-25 13:29:08.231 11439 11439 I FastBle : currentThread: 2

@@ -10,6 +10,7 @@ import com.oring.oring_wm_ui_test.apkTest.model.DrawerPageData
 import com.oring.oring_wm_ui_test.apkTest.model.TerminalBlockData
 import com.oring.oring_wm_ui_test.apkTest.model.TerminalBlockMember
 import com.oring.oring_wm_ui_test.apkTest.util.DateUtil
+import com.oring.oring_wm_ui_test.apkTest.util.ParseUtil
 import io.appium.java_client.MobileBy
 import io.appium.java_client.MobileElement
 import org.junit.Test
@@ -91,35 +92,33 @@ class WMReportTest: BaseExtentReportTest() {
         }
         thread.start()
 
-
+        /*** Start **/
         startTest()
-        /*** BluetoothAdapter* */
         deviceListTest()
-        /*** FastBle*  BluetoothGatt CreateTest*/
-        singUpNewDeviceTest()
+//        singUpNewDeviceTest()
         loginTest()
-        navigationBarPage()
-////
-////
-////        /*** SP_SW  EEWW    DashboardTest AI_value AI_raw RTD_mode finish*/
-        dashboardPage()
+
+        /*** Main board **/
+//        navigationBarPage()
+//        dashboardPage()
         dashboardIOPage()
-        forceModePage()
-        diPage()
-        doPage()
-        aiPage()
-        rtdPage()
-////////        /**GatewayTest */
-        gateWayPage()
-        deviceInfoPage()
-////////        /*** Cloud CS_Info CloudSetting HEX*/
-        networkStatusPage()
-        cloudSettingPage()
-        remoteControl()
-        /**
-         * MiniDump
-         * */
-        reLoginAfterResetPassword()
+//        forceModePage()
+
+        /*** I/O test **/
+
+//        diPage()
+//        doPage()
+//        aiPage()
+//        rtdPage()
+        rtdXYTest()
+
+//        gateWayPage()
+//        deviceInfoPage()
+//        networkStatusPage()
+//        cloudSettingPage()
+//        remoteControl()
+        /*** Reset password test **/
+//        reLoginAfterResetPassword()
 
     }
 
@@ -522,6 +521,7 @@ class WMReportTest: BaseExtentReportTest() {
 
     }
 
+
     @Test
     fun forceModePage(){
         val wait = WebDriverWait(driver?.let { it }, 10)
@@ -692,6 +692,63 @@ class WMReportTest: BaseExtentReportTest() {
     fun rtdPage(){
         val wait = WebDriverWait(driver?.let { it }, 10)
         val extentTest: ExtentTest = extent!!.createTest("RTD")
+
+        val relayText = "${targetPackageName}:id/txt_relay"
+        scrollToId(driver!!,relayText)
+        wait.untilViewLoad(relayText)
+
+        Thread.sleep(1500)
+        val rtdTable = "${targetPackageName}:id/rtd_table"
+        val imageID = "${targetPackageName}:id/img_config"
+
+        wait.untilViewLoad(rtdTable)
+        driver!!.findElements(By.id(rtdTable))[0].findElement(By.id(imageID)).click()
+        extentTest.screenshotInfo(driver!!, "rtdPage", "RTD config page.")
+
+        val switchEnable ="${targetPackageName}:id/swt_enable"
+        driver!!.findElement(By.ById(switchEnable)).click()
+
+
+
+        extentTest.screenshotInfo(driver!!, "rtdClickEnable", "After click enable.")
+
+        val editThreshold = "${targetPackageName}:id/edt_threshold"
+        val editThresholdXY = "${targetPackageName}:id/edt_threshold_XY"
+        wait.untilViewLoad(editThresholdXY)
+        driver!!.findElement(By.ById(editThreshold)).sendKeys("10")
+        Thread.sleep(1000)
+        driver!!.findElement(By.ById(editThresholdXY)).sendKeys("10")
+        Thread.sleep(1000)
+
+
+
+
+        val switchHighEnable ="${targetPackageName}:id/swt_high_enable"
+        val switchLowEnable ="${targetPackageName}:id/swt_low_enable"
+        val editTextLowAlarm ="${targetPackageName}:id/edt_low_alarm"
+        wait.untilViewLoad(switchHighEnable)
+        driver!!.findElement(By.ById(switchHighEnable)).click()
+        driver!!.findElement(By.ById(switchLowEnable)).click()
+
+        val buttonApply ="${targetPackageName}:id/btn_apply"
+        scrollToId(driver!!,buttonApply)
+
+        wait.untilViewLoad(editTextLowAlarm)
+        extentTest.screenshotInfo(driver!!, "alarmRTDClick", "After click high and low alarm.")
+
+        Thread.sleep(2000)
+        driver!!.findElement(By.ById(buttonApply)).click()
+
+
+        ParseUtil.parseRTDPageLog("RTD page log:", extentTest)
+
+        extentTest.log(Status.PASS,"pass.")
+    }
+
+    @Test
+    fun rtdXYTest(){
+        val wait = WebDriverWait(driver?.let { it }, 10)
+        val extentTest: ExtentTest = extent!!.createTest("RTD_XY")
 
         val relayText = "${targetPackageName}:id/txt_relay"
         scrollToId(driver!!,relayText)

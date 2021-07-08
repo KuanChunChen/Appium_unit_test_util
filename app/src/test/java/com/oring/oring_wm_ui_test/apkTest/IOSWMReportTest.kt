@@ -4,14 +4,14 @@ import com.aventstack.extentreports.ExtentTest
 import com.aventstack.extentreports.Status
 import com.oring.oring_wm_ui_test.apkTest.constants.Target
 import com.oring.oring_wm_ui_test.apkTest.util.DateUtil
+import com.oring.oring_wm_ui_test.apkTest.util.ParseUtil
 import io.appium.java_client.MobileBy
 import org.junit.Test
 import org.openqa.selenium.By
-import org.openqa.selenium.Keys
+import org.openqa.selenium.WebElement
 import org.openqa.selenium.remote.DesiredCapabilities
-import org.openqa.selenium.support.events.EventFiringWebDriver
+import org.openqa.selenium.remote.RemoteWebElement
 import org.openqa.selenium.support.ui.WebDriverWait
-import java.lang.Exception
 
 
 class IOSWMReportTest : BaseExtentReportTest() {
@@ -47,12 +47,17 @@ class IOSWMReportTest : BaseExtentReportTest() {
 
         navigatorBarTest()
         ioTest()
+
+        diTest()
+        doTest()
+        relayTest()
+        aiTest()
+//        rtdTest()
         deviceInfoTest()
         cloudSettingTest()
         lteConnectionStatusTest()
         gateWayTest()
         remoteControlTest()
-//        captureLogcat()
 
 
 
@@ -65,10 +70,6 @@ class IOSWMReportTest : BaseExtentReportTest() {
         val wait = WebDriverWait(driver?.let { it }, 10)
         val extentTest: ExtentTest = extent!!.createTest("LogCat Message")
         val listLog = ParseUtil.readIDeviceLogMessage(System.getProperty("user.dir") + "/auto_test/iosLogCatcher/wn_ios_log.txt")
-
-
-
-
 
 //        ParseUtil.parseIOSAllLogName(listLog, extentTest)
 
@@ -96,7 +97,7 @@ class IOSWMReportTest : BaseExtentReportTest() {
         val extentTest: ExtentTest = extent!!.createTest("Device")
 
         val deviceTable = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable"
-        val targetDeviceId = "WM_iot_test09"
+        val targetDeviceId = "WM_"
         Thread.sleep(1500)
         wait.untilXpath(deviceTable)
         extentTest.screenshotInfo(driver!!, "DeviceList", "Device list page.")
@@ -144,9 +145,9 @@ class IOSWMReportTest : BaseExtentReportTest() {
         /** Set new password  plus*/
 
 
-        val passwordAlert ="**/XCUIElementTypeAlert[`label == \"WM_iot_test09\"`]"
-        val login = "**/XCUIElementTypeAlert[`label == \"WM_iot_test09\"`]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeScrollView[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[3]"
-        val editPassword = "**/XCUIElementTypeAlert[`label == \"WM_iot_test09\"`]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeCollectionView/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther"
+        val passwordAlert ="**/XCUIElementTypeAlert[`label == \"WM_\"`]"
+        val login = "**/XCUIElementTypeAlert[`label == \"WM_\"`]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeScrollView[2]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther[3]"
+        val editPassword = "**/XCUIElementTypeAlert[`label == \"WM_\"`]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeScrollView[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeCollectionView/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[1]/XCUIElementTypeOther"
 
         wait.untilIosClassChain(passwordAlert)
         extentTest.screenshotInfo(driver!!, "PasswordInput", "Input login password.")
@@ -187,16 +188,17 @@ class IOSWMReportTest : BaseExtentReportTest() {
     }
 
     @Test
-    fun ioTest() {
+    fun ioTest(){
         val wait = WebDriverWait(driver?.let { it }, 15)
         val extentTest: ExtentTest = extent!!.createTest("I/O")
         val barLayout = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.DeviceStatusView\"`]"
+        val barID = "menu"
         val barNavigator = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.MenuView\"`][1]"
         val barMeanButton = "**/XCUIElementTypeButton[`label == \"menu\"`]"
         val barItemXpath = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell"
 
         wait.untilIosClassChain(barLayout)
-        driver?.findElement(MobileBy.iOSClassChain(barMeanButton))?.click()
+        driver?.findElementByAccessibilityId(barID)?.click()
 
         wait.untilIosClassChain(barNavigator)
 
@@ -208,12 +210,424 @@ class IOSWMReportTest : BaseExtentReportTest() {
         val waitUntilLayout = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable"
         wait.untilIosClassChain(waitUntilLayout)
 
+
         extentTest.screenshotInfo(driver!!, "IOPage", "I/O page.")
-//        Thread.sleep(3000)
 
         scrollToDown(driver!!)
+        Thread.sleep(2000)
         extentTest.screenshotInfo(driver!!, "IOPageScroll", "After I/O page scroll.")
+        extentTest.log(Status.PASS, "Pass.")
 
+        scrollToUp(driver!!)
+        Thread.sleep(2000)
+
+        driver?.findElementByAccessibilityId(barID)?.click()
+        wait.untilIosClassChain(barNavigator)
+        val listNavigatorItem2 = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem2?.get(0)?.click()
+
+
+
+    }
+    @Test
+    fun diTest() {
+        val wait = WebDriverWait(driver?.let { it }, 15)
+        val extentTest: ExtentTest = extent!!.createTest("DI")
+        val barLayout = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.DeviceStatusView\"`]"
+        val barID = "menu"
+
+        val barNavigator = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.MenuView\"`][1]"
+        val barMeanButton = "**/XCUIElementTypeButton[`label == \"menu\"`]"
+        val barItemXpath = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell"
+
+        wait.untilIosClassChain(barLayout)
+        driver?.findElementByAccessibilityId(barID)?.click()
+
+        wait.untilIosClassChain(barNavigator)
+
+
+
+        val listNavigatorItem = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem?.get(0)?.click()
+
+        val waitUntilLayout = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable"
+        wait.untilIosClassChain(waitUntilLayout)
+        val di0SettingID = "11"
+        val di1SettingID = "12"
+        val di2SettingID = "13"
+        val di3SettingID = "14"
+
+        driver!!.findElementByAccessibilityId(di0SettingID).click()
+        Thread.sleep(5000)
+
+//        val parent = driver!!.findElement(By.className("XCUIElementTypeTable")) as RemoteWebElement
+//        val parentID = parent.id
+//        val scrollObject = HashMap<String, String>()
+//        scrollObject["element"] = parentID
+//        scrollObject["direction"] = "down"
+////        scrollObject["predicateString"] = "label == \"DO\""
+//        scrollObject["toVisible"] = "any non empty text"
+//        driver!!.executeScript("mobile:scroll", scrollObject) // scroll to the target element
+
+        val diClearCount = "**/XCUIElementTypeStaticText[`label == \"CLEAR COUNTS\"`]"
+        val diEnable = "**/XCUIElementTypeSwitch[`label == \"Enable, Pre-processing, Filter time, Reporting, Trigger, ms, Trigger event\"`][1]"
+        val diFilterTimeEnable = "**/XCUIElementTypeButton[`label == \"Disable\"`]"
+        val diTriggerEnable = "**/XCUIElementTypeSwitch[`label == \"Enable, Pre-processing, Filter time, Reporting, Trigger, ms, Trigger event\"`][2]"
+        val diRising = "**/XCUIElementTypeButton[`label == \"Rising\"`]"
+        val diApply = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
+        val diCancel = "**/XCUIElementTypeButton[`label == \"CANCEL\"`]"
+
+        wait.untilIosClassChain(diClearCount)
+
+        extentTest.log(Status.INFO, "Start DI0 setting.")
+        extentTest.screenshotInfo(driver!!, "di0Page", "DI page.")
+
+        driver!!.findElement(MobileBy.iOSClassChain(diEnable)).click()
+        driver!!.findElement(MobileBy.iOSClassChain(diTriggerEnable)).click()
+        driver!!.findElement(MobileBy.iOSClassChain(diApply)).click()
+        Thread.sleep(6000)
+
+        wait.untilIosClassChain(waitUntilLayout)
+
+
+
+
+//        extentTest.screenshotInfo(driver!!, "IOPage", "I/O page.")
+//        Thread.sleep(3000)
+
+        extentTest.log(Status.PASS, "Pass.")
+        driver?.findElementByAccessibilityId(barID)?.click()
+        wait.untilIosClassChain(barNavigator)
+        val listNavigatorItem2 = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem2?.get(0)?.click()
+
+
+
+//        scrollToDown(driver!!)
+//        extentTest.screenshotInfo(driver!!, "IOPageScroll", "After I/O page scroll.")
+
+    }
+
+
+    @Test
+    fun doTest() {
+        val wait = WebDriverWait(driver?.let { it }, 15)
+        val extentTest: ExtentTest = extent!!.createTest("DO")
+        val barLayout = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.DeviceStatusView\"`]"
+        val barID = "menu"
+        val barNavigator = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.MenuView\"`][1]"
+        val barMeanButton = "**/XCUIElementTypeButton[`label == \"menu\"`]"
+        val barItemXpath = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell"
+
+        wait.untilIosClassChain(barLayout)
+        driver?.findElementByAccessibilityId(barID)?.click()
+
+        wait.untilIosClassChain(barNavigator)
+
+
+
+        val listNavigatorItem = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem?.get(0)?.click()
+
+        val waitUntilLayout = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable"
+        wait.untilIosClassChain(waitUntilLayout)
+
+        val do0SettingID = "21"
+        val do1SettingID = "22"
+        val do2SettingID = "23"
+        val do3SettingID = "24"
+
+
+
+        driver!!.findElementByAccessibilityId(do1SettingID).click()
+
+
+
+        val doEnable = "Enable, Pre-processing, Safe value, Output filter"
+        val doSafeValue = "**/XCUIElementTypeButton[`label == \"High\"`]"
+        val doOutputFilter = "**/XCUIElementTypeButton[`label == \"Disable\"`]"
+        val doApply = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
+        val doCancel = "**/XCUIElementTypeButton[`label == \"CANCEL\"`]"
+
+
+        wait.untilIosClassChain(doSafeValue)
+
+        extentTest.log(Status.INFO, "Start DO1 setting.")
+        extentTest.screenshotInfo(driver!!, "do1Page", "DO page.")
+
+        driver!!.findElementByAccessibilityId(doEnable).click()
+        Thread.sleep(1400)
+        extentTest.screenshotInfo(driver!!, "do1After", "After click.")
+        driver!!.findElement(MobileBy.iOSClassChain(doApply)).click()
+        Thread.sleep(6000)
+
+        wait.untilIosClassChain(waitUntilLayout)
+
+
+
+
+//        extentTest.screenshotInfo(driver!!, "IOPage", "I/O page.")
+//        Thread.sleep(3000)
+
+
+        extentTest.log(Status.PASS, "Pass.")
+        driver?.findElementByAccessibilityId(barID)?.click()
+        wait.untilIosClassChain(barNavigator)
+        val listNavigatorItem2 = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem2?.get(0)?.click()
+
+
+//        scrollToDown(driver!!)
+//        extentTest.screenshotInfo(driver!!, "IOPageScroll", "After I/O page scroll.")
+
+    }
+
+    @Test
+    fun relayTest() {
+        val wait = WebDriverWait(driver?.let { it }, 15)
+        val extentTest: ExtentTest = extent!!.createTest("Relay")
+        val barLayout = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.DeviceStatusView\"`]"
+        val barID = "menu"
+        val barNavigator = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.MenuView\"`][1]"
+        val barMeanButton = "**/XCUIElementTypeButton[`label == \"menu\"`]"
+        val barItemXpath = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell"
+
+        wait.untilIosClassChain(barLayout)
+        driver?.findElementByAccessibilityId(barID)?.click()
+
+        wait.untilIosClassChain(barNavigator)
+
+
+
+        val listNavigatorItem = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem?.get(0)?.click()
+
+        val waitUntilLayout = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable"
+        wait.untilIosClassChain(waitUntilLayout)
+        scrollToDown(driver!!)
+
+
+
+        val relay0SettingID = "31"
+        val relay1SettingID = "32"
+
+        val ai0SettingID = "41"
+        val ai1SettingID = "42"
+
+        val rtd0SettingID = "51"
+        val rtd1SettingID = "52"
+        val rtd2SettingID = "53"
+        val rtd3SettingID = "54"
+
+        driver!!.findElementByAccessibilityId(relay1SettingID).click()
+
+//        val parent = driver!!.findElement(By.className("XCUIElementTypeTable")) as RemoteWebElement
+//        val parentID = parent.id
+//        val scrollObject = HashMap<String, String>()
+//        scrollObject["element"] = parentID
+//        scrollObject["direction"] = "down"
+////        scrollObject["predicateString"] = "label == \"DO\""
+//        scrollObject["toVisible"] = "any non empty text"
+//        driver!!.executeScript("mobile:scroll", scrollObject) // scroll to the target element
+
+        val relayEnable = "Enable, Pre-processing, Safe value, Output filter"
+        val relaySafeValue = "**/XCUIElementTypeButton[`label == \"High\"`]"
+        val relayOutputFilter = "**/XCUIElementTypeButton[`label == \"Disable\"`]"
+        val relayApply = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
+        val relayCancel = "**/XCUIElementTypeButton[`label == \"CANCEL\"`]"
+//
+//
+        wait.untilIosClassChain(relaySafeValue)
+//
+        extentTest.log(Status.INFO, "Start Relay1 setting.")
+        extentTest.screenshotInfo(driver!!, "relay1", "Relay page.")
+
+        driver!!.findElementByAccessibilityId(relayEnable).click()
+        Thread.sleep(1400)
+        extentTest.screenshotInfo(driver!!, "relay1After", "After click.")
+        driver!!.findElement(MobileBy.iOSClassChain(relayApply)).click()
+        Thread.sleep(6000)
+
+
+        wait.untilIosClassChain(waitUntilLayout)
+
+        scrollToUp(driver!!)
+        Thread.sleep(2000)
+
+        extentTest.log(Status.PASS, "Pass.")
+        driver?.findElementByAccessibilityId(barID)?.click()
+        wait.untilIosClassChain(barNavigator)
+        val listNavigatorItem2 = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem2?.get(0)?.click()
+
+
+//        scrollToDown(driver!!)
+//        extentTest.screenshotInfo(driver!!, "IOPageScroll", "After I/O page scroll.")
+
+    }
+
+    @Test
+    fun aiTest() {
+        val wait = WebDriverWait(driver?.let { it }, 15)
+        val extentTest: ExtentTest = extent!!.createTest("AI")
+        val barLayout = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.DeviceStatusView\"`]"
+        val barID = "menu"
+        val barNavigator = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.MenuView\"`][1]"
+        val barMeanButton = "**/XCUIElementTypeButton[`label == \"menu\"`]"
+        val barItemXpath = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell"
+
+        wait.untilIosClassChain(barLayout)
+        driver?.findElementByAccessibilityId(barID)?.click()
+
+        wait.untilIosClassChain(barNavigator)
+
+
+
+        val listNavigatorItem = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem?.get(0)?.click()
+
+        val waitUntilLayout = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable"
+        wait.untilIosClassChain(waitUntilLayout)
+        scrollToDown(driver!!)
+
+
+
+
+        val ai0SettingID = "41"
+        val ai1SettingID = "42"
+
+
+        driver!!.findElementByAccessibilityId(ai1SettingID).click()
+
+//        val parent = driver!!.findElement(By.className("XCUIElementTypeTable")) as RemoteWebElement
+//        val parentID = parent.id
+//        val scrollObject = HashMap<String, String>()
+//        scrollObject["element"] = parentID
+//        scrollObject["direction"] = "down"
+////        scrollObject["predicateString"] = "label == \"DO\""
+//        scrollObject["toVisible"] = "any non empty text"
+//        driver!!.executeScript("mobile:scroll", scrollObject) // scroll to the target element
+
+        val aiEnable = "**/XCUIElementTypeSwitch[`label == \"Enable, Frequency suppression, Input type, Anomaly Detection, High alarm, Alarm threshold, Low alarm, Alarm threshold, V, V, Range\"`][1]"
+        val aiFrequencySuppression = "**/XCUIElementTypeButton[`label == \"50Hz\"`]"
+        val aiInputType = "**/XCUIElementTypeButton[`label == \"Voltage\"`]"
+        val aiRange = "**/XCUIElementTypeButton[`label == \"+-10V\"`]"
+        val aiHighAlarm = "**/XCUIElementTypeSwitch[`label == \"Enable, Frequency suppression, Input type, Anomaly Detection, High alarm, Alarm threshold, Low alarm, Alarm threshold, mA, mA, Range\"`][2]"
+        val aiLowAlarm = "**/XCUIElementTypeSwitch[`label == \"Enable, Frequency suppression, Input type, Anomaly Detection, High alarm, Alarm threshold, Low alarm, Alarm threshold, mA, mA, Range\"`][3]"
+        val aiHighAlarmThreeHold = "**/XCUIElementTypeTextField[`value == \"0\"`][1]"
+        val aiLowAlarmThreeHold = "**/XCUIElementTypeTextField[`value == \"0\"`][2]"
+        val aiApply = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
+        val aiCancel = "**/XCUIElementTypeButton[`label == \"CANCEL\"`]"
+
+
+        wait.untilIosClassChain(aiEnable)
+//
+        extentTest.log(Status.INFO, "Start ai1 setting.")
+        extentTest.screenshotInfo(driver!!, "ai1Page", "AI page.")
+//
+        driver!!.findElement(MobileBy.iOSClassChain(aiEnable)).click()
+        Thread.sleep(2000)
+        extentTest.screenshotInfo(driver!!, "ai1After", "AI after click.")
+        scrollToDown(driver!!)
+        Thread.sleep(1500)
+        driver!!.findElement(MobileBy.iOSClassChain(aiApply)).click()
+        Thread.sleep(6000)
+        wait.untilIosClassChain(waitUntilLayout)
+
+        scrollToUp(driver!!)
+        Thread.sleep(2000)
+
+        extentTest.log(Status.PASS, "Pass.")
+        driver?.findElementByAccessibilityId(barID)?.click()
+        wait.untilIosClassChain(barNavigator)
+        val listNavigatorItem2 = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem2?.get(0)?.click()
+
+
+//        scrollToDown(driver!!)
+//        extentTest.screenshotInfo(driver!!, "IOPageScroll", "After I/O page scroll.")
+    }
+
+    @Test
+    fun rtdTest() {
+        val wait = WebDriverWait(driver?.let { it }, 15)
+        val extentTest: ExtentTest = extent!!.createTest("RTD")
+        val barLayout = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.DeviceStatusView\"`]"
+        val barID = "menu"
+        val barNavigator = "**/XCUIElementTypeNavigationBar[`name == \"Weidmuller_IOS.MenuView\"`][1]"
+        val barMeanButton = "**/XCUIElementTypeButton[`label == \"menu\"`]"
+        val barItemXpath = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell"
+
+        wait.untilIosClassChain(barLayout)
+        driver?.findElementByAccessibilityId(barID)?.click()
+
+        wait.untilIosClassChain(barNavigator)
+
+
+
+        val listNavigatorItem = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem?.get(0)?.click()
+
+        val waitUntilLayout = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable"
+        wait.untilIosClassChain(waitUntilLayout)
+        scrollToDown(driver!!)
+
+
+
+
+        val rtd0SettingID = "51"
+        val rtd1SettingID = "52"
+        val rtd2SettingID = "53"
+        val rtd3SettingID = "54"
+
+        driver!!.findElementByAccessibilityId(rtd1SettingID).click()
+
+
+        val rtdEnable = "**/XCUIElementTypeSwitch[`label == \"Enable, Range, Anomaly Detection, Detection threshold, High alarm, Alarm threshold, Low alarm, Alarm threshold, mV, mV, mV, XY% Detection threshold, %\"`][1]"
+        val rtdDetectThreshold = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[4]/XCUIElementTypeTextField[1]"
+        val rtdXYDetectionThreshold = "**/XCUIElementTypeTextField[`value == \"0~100\"`]"
+        val rtdRange = "**/XCUIElementTypeButton[`label == \"+-62.5mV\"`]"
+        val rtdHighAlarm = "**/XCUIElementTypeSwitch[`label == \"Enable, Range, Anomaly Detection, Detection threshold, High alarm, Alarm threshold, Low alarm, Alarm threshold, mV, mV, mV, XY% Detection threshold, %\"`][2]"
+        val rtdHighAlarmThreshold = "**/XCUIElementTypeTextField[`value == \"0\"`][1]"
+        val rtdLowAlarm = "**/XCUIElementTypeSwitch[`label == \"Enable, Range, Anomaly Detection, Detection threshold, High alarm, Alarm threshold, Low alarm, Alarm threshold, mV, mV, mV, XY% Detection threshold, %\"`][3]"
+        val rtdLowAlarmThreshold = "**/XCUIElementTypeTextField[`value == \"0\"`][2]"
+        val rtdApply =  "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
+        val rtdCancel = "**/XCUIElementTypeButton[`label == \"CANCEL\"`]"
+
+//
+        wait.untilIosClassChain(rtdEnable)
+
+        extentTest.log(Status.INFO, "Start RTD setting.")
+        extentTest.screenshotInfo(driver!!, "rtd3Page", "RTD page.")
+
+        driver!!.findElement(MobileBy.iOSClassChain(rtdEnable)).click()
+        Thread.sleep(2000)
+        extentTest.screenshotInfo(driver!!, "rtd3PageAfter", "RTD after click.")
+        scrollToDown(driver!!)
+        Thread.sleep(1500)
+        /***
+         * Start test xy value
+         */
+        driver!!.findElement(MobileBy.iOSClassChain(rtdApply)).click()
+        Thread.sleep(6000)
+
+        wait.untilIosClassChain(waitUntilLayout)
+
+
+
+
+        scrollToUp(driver!!)
+        Thread.sleep(2000)
+
+        extentTest.log(Status.PASS, "Pass.")
+        driver?.findElementByAccessibilityId(barID)?.click()
+        wait.untilIosClassChain(barNavigator)
+        val listNavigatorItem2 = driver?.findElements(By.xpath(barItemXpath))
+        listNavigatorItem2?.get(0)?.click()
+
+
+//        scrollToDown(driver!!)
+//        extentTest.screenshotInfo(driver!!, "IOPageScroll", "After I/O page scroll.")
     }
     @Test
     fun deviceInfoTest(){
@@ -397,12 +811,13 @@ class IOSWMReportTest : BaseExtentReportTest() {
         driver?.findElement(MobileBy.iOSClassChain(editButton))?.click()
 
         val editBandConfigNB1 = "**/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[4]/XCUIElementTypeOther[1]/XCUIElementTypeOther"
-        wait.untilIosClassChain(editBandConfigNB1)
-        extentTest.screenshotInfo(driver!!, "lteConnectEdit", "Lte edit page.")
-
         val editDeviceName = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeTextField"
         val applyButton = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
         val closeButton = "**/XCUIElementTypeButton[`label == \"closeButton\"`]"
+
+        wait.untilIosClassChain(applyButton)
+        extentTest.screenshotInfo(driver!!, "lteConnectEdit", "Lte edit page.")
+
 
         try {
             driver?.findElement(MobileBy.iOSClassChain(applyButton))?.click()
@@ -495,7 +910,7 @@ class IOSWMReportTest : BaseExtentReportTest() {
         val reportIntervalTimeXpath = "//XCUIElementTypeApplication[@name=\"Weidmüller\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeTextField"
         val cancelButton = "**/XCUIElementTypeButton[`label == \"CANCEL\"`]"
         val applyButton = "**/XCUIElementTypeButton[`label == \"APPLY\"`]"
-        val lastPageButton = "**/XCUIElementTypeButton[`label == \"WM_iot_test09\"`]"
+        val lastPageButton = "**/XCUIElementTypeButton[`label == \"WM_\"`]"
         wait.untilXpath(reportIntervalTimeXpath)
         extentTest.screenshotInfo(driver!!, "ReportingInterval", "Report interval page.")
 
@@ -585,8 +1000,10 @@ class IOSWMReportTest : BaseExtentReportTest() {
             wait.untilIosClassChain(rtuApplyButton)
             Thread.sleep(1500)
             extentTest.screenshotInfo(driver!!, "RtuConfig", "Rtu configuration page.")
-            driver?.findElement(MobileBy.iOSClassChain(rtuApplyButton))?.click()
-            Thread.sleep(10000)
+//            driver?.findElement(MobileBy.iOSClassChain(rtuApplyButton))?.click()
+//            driver?.findElement(MobileBy.iOSClassChain(rtuCancelButton))?.click()
+//            Thread.sleep(10000)
+            extentTest.log(Status.FAIL,"When click rtu apply will show data illegal and stuck with no response.")
             driver?.findElement(MobileBy.iOSClassChain(modBusRTUReturn))?.click()
             Thread.sleep(500)
 

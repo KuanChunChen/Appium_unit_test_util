@@ -140,7 +140,7 @@ fun iosScrollToName(driver: AndroidDriver<MobileElement>, elementName: String, f
 
 fun iosScrollToPredicateString(driver: AndroidDriver<MobileElement>, predicateString: String, findClassName: String) {
 
-    val parent = driver.findElement(By.className(findClassName)) as RemoteWebElement
+    val parent = driver.findElementByAccessibilityId(findClassName) as RemoteWebElement
 
     val parentID = parent.id
     val scrollObject = HashMap<String, String>()
@@ -153,7 +153,7 @@ fun iosScrollToPredicateString(driver: AndroidDriver<MobileElement>, predicateSt
 
 fun scrollToUnSeeElement(driver: AndroidDriver<MobileElement>, elementIosChain: String) {
 //    val element: WebElement = driver.findElement(MobileBy.iOSClassChain(elementIosChain))
-    val element: WebElement = driver.findElementByName(elementIosChain)
+    val element: WebElement = driver.findElementByAccessibilityId(elementIosChain)
 
     val js = driver as JavascriptExecutor
 
@@ -177,6 +177,15 @@ fun scrollToDown(driver: AndroidDriver<MobileElement>) {
     val js = driver as JavascriptExecutor
     val scrollObject = HashMap<String, String>()
     scrollObject["direction"] = "down"
+    js.executeScript("mobile: scroll", scrollObject)
+}
+
+
+fun scrollToUp(driver: AndroidDriver<MobileElement>) {
+
+    val js = driver as JavascriptExecutor
+    val scrollObject = HashMap<String, String>()
+    scrollObject["direction"] = "up"
     js.executeScript("mobile: scroll", scrollObject)
 }
 

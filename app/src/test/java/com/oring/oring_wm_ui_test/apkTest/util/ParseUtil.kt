@@ -1,4 +1,4 @@
-package com.oring.oring_wm_ui_test.apkTest
+package com.oring.oring_wm_ui_test.apkTest.util
 
 import com.aventstack.extentreports.ExtentTest
 import com.aventstack.extentreports.Status
@@ -18,7 +18,7 @@ object ParseUtil {
     private fun parseLogName(scenario: (logCatchModel: LogCatchModel) -> Unit) {
 
         val listLog =
-            readLogCatMessage(System.getProperty("user.dir") + "/auto_test/logCatcher/wn_log.txt")
+                readLogCatMessage(System.getProperty("user.dir") + "/auto_test/logCatcher/wn_log.txt")
         listLog.forEach {
             scenario(it)
         }
@@ -225,7 +225,7 @@ object ParseUtil {
         val node = extentTest.createNode(targetName)
         val targetList = mutableListOf<String>()
 
-        parseLogName{
+        parseLogName {
             if (it.logName != null && it.logName!!.contains(LogName.Gateway)) {
                 targetList.add(replaceLogTag(it.totalMessage!!))
             }
