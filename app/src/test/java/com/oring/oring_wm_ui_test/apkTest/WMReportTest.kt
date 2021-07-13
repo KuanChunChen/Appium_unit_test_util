@@ -99,26 +99,26 @@ class WMReportTest: BaseExtentReportTest() {
         loginTest()
 
         /*** Main board **/
-//        navigationBarPage()
-//        dashboardPage()
+        navigationBarPage()
+        dashboardPage()
         dashboardIOPage()
-//        forceModePage()
+        forceModePage()
 
         /*** I/O test **/
 
-//        diPage()
-//        doPage()
+        diPage()
+        doPage()
 //        aiPage()
 //        rtdPage()
         rtdXYTest()
 
-//        gateWayPage()
-//        deviceInfoPage()
-//        networkStatusPage()
-//        cloudSettingPage()
-//        remoteControl()
+        gateWayPage()
+        deviceInfoPage()
+        networkStatusPage()
+        cloudSettingPage()
+        remoteControl()
         /*** Reset password test **/
-//        reLoginAfterResetPassword()
+        reLoginAfterResetPassword()
 
     }
 
@@ -289,8 +289,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage?.get(6)?.click()
 
         wait.untilViewLoad(remoteApplyButton)
@@ -343,15 +343,15 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"開啟導覽匣\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage?.get(0)?.click()
         Thread.sleep(5000)
         extentTest.screenshotInfo(driver, "backToDashboard", "Back to dash board and waiting five seconds.")
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage2 = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage2 = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage2?.get(5)?.click()
 
     }
@@ -462,13 +462,14 @@ class WMReportTest: BaseExtentReportTest() {
 
         val textRtd = "${targetPackageName}:id/txt_rtd"
         val rtdListXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.ListView[4]/android.widget.LinearLayout"
-
+        val toolbarLogoId = "${targetPackageName}:id/navigation_header_container"
 
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.untilViewLoad(toolbarLogoId)
+//        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage?.get(1)?.click()
 
         wait.untilViewLoad(terminalBlockLayout)
@@ -515,7 +516,9 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(textDi)
 //        forceModePage(extentTest)
 
-        ParseUtil.parseDashboardIOTestLog("IO page log:", extentTest)
+        ParseUtil.parseDashboardIOTestLog("I/O log:", extentTest)
+        ParseUtil.parseMCUModeLog("MCU_MODE:", extentTest)
+
         extentTest.pass("pass")
 
 
@@ -769,51 +772,113 @@ class WMReportTest: BaseExtentReportTest() {
 
         extentTest.screenshotInfo(driver!!, "rtdClickEnable", "After click enable.")
 
-        val editThreshold = "${targetPackageName}:id/edt_threshold"
-        val editThresholdXY = "${targetPackageName}:id/edt_threshold_XY"
-        wait.untilViewLoad(editThresholdXY)
-        driver!!.findElement(By.ById(editThreshold)).sendKeys("10")
-        Thread.sleep(1000)
-        driver!!.findElement(By.ById(editThresholdXY)).sendKeys("10")
-        Thread.sleep(1000)
+        try {
+
+            val editThreshold = "${targetPackageName}:id/edt_threshold"
+            val editThresholdXY = "${targetPackageName}:id/edt_threshold_XY"
+            val buttonApply ="${targetPackageName}:id/btn_apply"
+
+            /** error 01*/
+            wait.untilViewLoad(editThresholdXY)
+            driver!!.findElement(By.ById(editThreshold)).sendKeys("-1")
+            Thread.sleep(1000)
+            driver!!.findElement(By.ById(editThresholdXY)).sendKeys("-1")
+            Thread.sleep(1000)
+            extentTest.screenshotInfo(driver!!, "rtuErrorCase1", "Input error value test 01 :")
+            Thread.sleep(1000)
+            driver!!.findElement(By.ById(buttonApply)).click()
+            extentTest.screenshotInfo(driver!!, "afterRtuErrorCase1", "After test 01:")
+            driver!!.findElement(By.ById(editThreshold)).clear()
+            driver!!.findElement(By.ById(editThresholdXY)).clear()
+            /** error 02*/
+            wait.untilViewLoad(editThresholdXY)
+            driver!!.findElement(By.ById(editThreshold)).sendKeys("")
+            Thread.sleep(1000)
+            driver!!.findElement(By.ById(editThresholdXY)).sendKeys("999")
+            Thread.sleep(1000)
+            extentTest.screenshotInfo(driver!!, "rtuErrorCase2", "Input error value test 02 :")
+            Thread.sleep(1000)
+            driver!!.findElement(By.ById(buttonApply)).click()
+            extentTest.screenshotInfo(driver!!, "afterRtuErrorCase2", "After test 02:")
+            driver!!.findElement(By.ById(editThreshold)).clear()
+            driver!!.findElement(By.ById(editThresholdXY)).clear()
+
+            /** error 03*/
+            wait.untilViewLoad(editThresholdXY)
+            driver!!.findElement(By.ById(editThreshold)).sendKeys("123")
+            Thread.sleep(1000)
+            driver!!.findElement(By.ById(editThresholdXY)).sendKeys("")
+            Thread.sleep(1000)
+            extentTest.screenshotInfo(driver!!, "rtuErrorCase3", "Input error value test 03:")
+            Thread.sleep(1000)
+            driver!!.findElement(By.ById(buttonApply)).click()
+            extentTest.screenshotInfo(driver!!, "afterRtuErrorCase3", "After test 03:")
+            driver!!.findElement(By.ById(editThreshold)).clear()
+            driver!!.findElement(By.ById(editThresholdXY)).clear()
+
+            /** error 04*/
+            wait.untilViewLoad(editThresholdXY)
+            driver!!.findElement(By.ById(editThreshold)).sendKeys("12")
+            Thread.sleep(1000)
+            driver!!.findElement(By.ById(editThresholdXY)).sendKeys("999")
+            Thread.sleep(1000)
+            extentTest.screenshotInfo(driver!!, "rtuErrorCase4", "Input error value test 04:")
+            Thread.sleep(1000)
+            driver!!.findElement(By.ById(buttonApply)).click()
+            extentTest.screenshotInfo(driver!!, "afterRtuErrorCase4", "After test 04:")
+            driver!!.findElement(By.ById(editThreshold)).clear()
+            driver!!.findElement(By.ById(editThresholdXY)).clear()
+
+            wait.untilViewLoad(editThresholdXY)
+            driver!!.findElement(By.ById(editThreshold)).sendKeys("12")
+            Thread.sleep(1000)
+            driver!!.findElement(By.ById(editThresholdXY)).sendKeys("12")
+            Thread.sleep(1000)
+            extentTest.screenshotInfo(driver!!, "rtuTrueCase", "Input true value test :")
+            Thread.sleep(1000)
+            driver!!.findElement(By.ById(buttonApply)).click()
 
 
+        } catch (e: Exception) {
+            extentTest.log(Status.FAIL,"X Y Value test failed.")
+
+        }
 
 
-        val switchHighEnable ="${targetPackageName}:id/swt_high_enable"
-        val switchLowEnable ="${targetPackageName}:id/swt_low_enable"
-        val editTextLowAlarm ="${targetPackageName}:id/edt_low_alarm"
-        wait.untilViewLoad(switchHighEnable)
-        driver!!.findElement(By.ById(switchHighEnable)).click()
-        driver!!.findElement(By.ById(switchLowEnable)).click()
-
-        val buttonApply ="${targetPackageName}:id/btn_apply"
-        scrollToId(driver!!,buttonApply)
-
-        wait.untilViewLoad(editTextLowAlarm)
-        extentTest.screenshotInfo(driver!!, "alarmRTDClick", "After click high and low alarm.")
-
-        Thread.sleep(2000)
-        driver!!.findElement(By.ById(buttonApply)).click()
-
-
-        ParseUtil.parseRTDPageLog("RTD page log:", extentTest)
 
         extentTest.log(Status.PASS,"pass.")
+
+//        val switchHighEnable ="${targetPackageName}:id/swt_high_enable"
+//        val switchLowEnable ="${targetPackageName}:id/swt_low_enable"
+//        val editTextLowAlarm ="${targetPackageName}:id/edt_low_alarm"
+//        wait.untilViewLoad(switchHighEnable)
+//        driver!!.findElement(By.ById(switchHighEnable)).click()
+//        driver!!.findElement(By.ById(switchLowEnable)).click()
+
+//        val buttonApply ="${targetPackageName}:id/btn_apply"
+//        scrollToId(driver!!,buttonApply)
+
+//        wait.untilViewLoad(editTextLowAlarm)
+//        extentTest.screenshotInfo(driver!!, "alarmRTDClick", "After click high and low alarm.")
+
     }
     @Test
     fun navigationBarPage() {
         val wait = WebDriverWait(driver?.let { it }, 10)
         val extentTest: ExtentTest = extent!!.createTest("Navigation bar")
         val terminalBlockLayout = "${targetPackageName}:id/action_bar_root"
+        val toolbarLogoId = "${targetPackageName}:id/navigation_header_container"
+        val recyclerViewId = "${targetPackageName}:id/design_navigation_view"
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
 
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
+        wait.untilViewLoad(toolbarLogoId)
+//        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
         extentTest.screenshotInfo(driver!!,"bar","After click navigation bar button.")
 
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+//        val listDrawerPage = driver?.findElements(By.id(recyclerViewId))
         mutableListOf<DrawerPageData>().apply {
             val itemText = "${targetPackageName}:id/design_menu_item_text"
 
@@ -845,8 +910,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage?.get(3)?.click()
 
 
@@ -910,8 +975,8 @@ class WMReportTest: BaseExtentReportTest() {
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
 
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage?.get(3)?.click()
 
 
@@ -1011,8 +1076,8 @@ class WMReportTest: BaseExtentReportTest() {
         val terminalBlockLayout = "${targetPackageName}:id/action_bar_root"
         wait.untilViewLoad(terminalBlockLayout)
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage?.get(3)?.click()
 
         wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")))
@@ -1051,8 +1116,8 @@ class WMReportTest: BaseExtentReportTest() {
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"開啟導覽匣\"]")?.click()
         /** normal */
 //        driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage?.get(2)?.click()
 
         wait.untilViewLoad(buttonEnable)
@@ -1141,8 +1206,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage?.get(5)?.click()
 
 
@@ -1208,8 +1273,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage?.get(5)?.click()
 
 
@@ -1290,8 +1355,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.y0/android.support.v7.widget.s0")
+        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage?.get(4)?.click()
 
         wait.until(ExpectedConditions.elementToBeClickable(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout[5]")))

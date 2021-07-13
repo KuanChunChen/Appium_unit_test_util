@@ -12,6 +12,9 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.util.regex.Pattern
 
+
+
+
 object ParseUtil {
 
 
@@ -36,6 +39,36 @@ object ParseUtil {
                 }
             }
         }
+
+    }
+
+    fun parseReadModeLog(targetName: String, extentTest: ExtentTest) {
+
+        val node = extentTest.createNode(targetName)
+        parseLogName {
+            when (it.logName) {
+                LogName.READ_MODE -> {
+                    node.log(Status.INFO, it.totalMessage)
+                }
+            }
+        }
+
+    }
+
+    fun parseMCUModeLog(targetName: String, extentTest: ExtentTest) {
+
+        val node = extentTest.createNode(targetName)
+        val targetList = mutableListOf<String>()
+
+        parseLogName {
+            when (it.logName) {
+                LogName.MCU_MODE -> {
+                    targetList.add(replaceLogTag(it.totalMessage!!))
+                }
+            }
+        }
+        node.info(MarkupHelper.createOrderedList(targetList))
+
 
     }
 

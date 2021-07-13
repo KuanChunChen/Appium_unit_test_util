@@ -90,6 +90,11 @@ object LogName {
     const val w = "@W@"
     const val wd = "@WD"
     const val write = "@Write"
+
+    const val READ_MODE = "Read Mode"
+    const val MCU_MODE = "MCU_MODE"
+
+
 //    const val 通道 = "通道"
 
 }
