@@ -1,14 +1,17 @@
 package com.oring.oring_wm_ui_test.apkTest
 
 import com.aventstack.extentreports.ExtentTest
+import com.aventstack.extentreports.GherkinKeyword
 import com.aventstack.extentreports.Status
 import com.aventstack.extentreports.markuputils.CodeLanguage
+import com.aventstack.extentreports.markuputils.ExtentColor
 import com.aventstack.extentreports.markuputils.MarkupHelper
 import com.google.gson.Gson
 import com.oring.oring_wm_ui_test.apkTest.constants.Target
 import com.oring.oring_wm_ui_test.apkTest.model.DrawerPageData
 import com.oring.oring_wm_ui_test.apkTest.model.TerminalBlockData
 import com.oring.oring_wm_ui_test.apkTest.model.TerminalBlockMember
+import com.oring.oring_wm_ui_test.apkTest.util.AndroidInfoUtil
 import com.oring.oring_wm_ui_test.apkTest.util.DateUtil
 import com.oring.oring_wm_ui_test.apkTest.util.ParseUtil
 import io.appium.java_client.MobileBy
@@ -39,20 +42,20 @@ class WMReportTest: BaseExtentReportTest() {
 
     @Test
     fun wmAndroidPartDemo() {
-        val thread = Thread {
-            ParseUtil.execCmdShell("./android_wm_.sh", "/auto_test/logCatcher/")
-        }
-        thread.start()
-
-
-        startTest()
-        /*** BluetoothAdapter* */
-        deviceListTest()
-
-        singUpNewDeviceTest()
-        loginTest()
-        deviceInfoSetName()
-        cloudSettingORingCloud()
+//        val thread = Thread {
+//            ParseUtil.execCmdShell("./android_wm_.sh", "/auto_test/logCatcher/")
+//        }
+//        thread.start()
+//
+//
+//        startTest()
+//        /*** BluetoothAdapter* */
+//        deviceListTest()
+//
+//        singUpNewDeviceTest()
+//        loginTest()
+//        deviceInfoSetName()
+//        cloudSettingORingCloud()
 
     }
 
@@ -95,29 +98,29 @@ class WMReportTest: BaseExtentReportTest() {
         /*** Start **/
         startTest()
         deviceListTest()
-//        singUpNewDeviceTest()
+        singUpNewDeviceTest()
         loginTest()
-
-        /*** Main board **/
+//
+////        /*** Main board **/
         navigationBarPage()
         dashboardPage()
         dashboardIOPage()
         forceModePage()
-
-        /*** I/O test **/
-
+//
+//        /*** I/O test **/
+//
         diPage()
         doPage()
-//        aiPage()
-//        rtdPage()
+        aiPage()
+        rtdPage()
         rtdXYTest()
-
+//
         gateWayPage()
         deviceInfoPage()
         networkStatusPage()
         cloudSettingPage()
         remoteControl()
-        /*** Reset password test **/
+//        /*** Reset password test **/
         reLoginAfterResetPassword()
 
     }
@@ -126,11 +129,19 @@ class WMReportTest: BaseExtentReportTest() {
     fun startTest(){
         val wait = WebDriverWait(driver?.let { it }, 10)
         val extentTest: ExtentTest = extent!!.createTest("Start")
-        extentTest.screenshotInfo(driver!!, "startPage", "Start page.")
-        extentTest.log(Status.PASS, "pass")
+
+        extentTest.info("This appium test start with following setting , please refer it.")
+        extentTest.info(MarkupHelper.createCodeBlock(AndroidInfoUtil().getStartInfo(driver), CodeLanguage.JSON));
+//        extentTest.createNode(GherkinKeyword("Given"), "Start auto test and it infomation").info(AndroidInfoUtil().getStartInfo(driver));
+
+        val testGiven = extentTest.createNode(GherkinKeyword("Given"), "Open start page from appium")
+        testGiven.screenshotInfo(driver!!, "startPage", "Start page.")
 
         val startButton = "${targetPackageName}:id/txt_ble"
         driver?.findElementById(startButton)?.click()
+
+        testGiven.info("Click button with no crash.")
+        testGiven.pass("pass.")
     }
 
     @Test
@@ -144,6 +155,7 @@ class WMReportTest: BaseExtentReportTest() {
         val itemTextRSSI = "${targetPackageName}:id/txt_rssi"
 
         wait.untilViewLoad(deviceListLayout)
+
         extentTest.screenshotInfo(driver!!, "DeviceList", "device list page")
 
 
@@ -194,18 +206,25 @@ class WMReportTest: BaseExtentReportTest() {
         val inputPasswordEditOneText = "${targetPackageName}:id/edt_ble_password1"
         val inputPasswordEditTwoText = "${targetPackageName}:id/edt_ble_password2"
         val applyButton = "${targetPackageName}:id/btn_apply"
+        val testGiven = extentTest.createNode(GherkinKeyword("Given"), "Open start page from appium")
 
-        wait.untilViewLoad(inputPasswordEditOneText)
-        extentTest.screenshotInfo(driver!!, "signUpPage", "Set New Device Page.")
-
-        driver?.findElementById(inputPasswordEditOneText)?.sendKeys("123456")
-        driver?.findElementById(inputPasswordEditTwoText)?.sendKeys("123456")
-        extentTest.screenshotInfo(driver!!, "afterInputNewPassword", "Auto input new password test.")
-        wait.until(ExpectedConditions.attributeToBeNotEmpty(driver?.findElementById(inputPasswordEditTwoText), "text"))
+        try {
 
 
-        extentTest.log(Status.PASS,"pass")
-        driver?.findElementById(applyButton)?.click()
+            wait.untilViewLoad(inputPasswordEditOneText)
+            extentTest.screenshotInfo(driver!!, "signUpPage", "Set New Device Page.")
+
+            driver?.findElementById(inputPasswordEditOneText)?.sendKeys("123456")
+            driver?.findElementById(inputPasswordEditTwoText)?.sendKeys("123456")
+            extentTest.screenshotInfo(driver!!, "afterInputNewPassword", "Auto input new password test.")
+            wait.until(ExpectedConditions.attributeToBeNotEmpty(driver?.findElementById(inputPasswordEditTwoText), "text"))
+
+
+            extentTest.log(Status.PASS, "pass")
+            driver?.findElementById(applyButton)?.click()
+        } catch (e: Exception) {
+            testGiven.warning(MarkupHelper.createLabel("Set new device can not test , cause device can not reset.", ExtentColor.RED))
+        }
     }
     @Test
     fun loginTest(){
@@ -223,14 +242,14 @@ class WMReportTest: BaseExtentReportTest() {
 
         driver?.findElementById(inputPasswordEditText)?.sendKeys("wrong123456")
         extentTest.screenshotInfo(driver!!, "AfterInputWrong", "Auto input wrong password test.")
-        wait.untilViewLoad(inputPasswordEditText,extentTest)
+        wait.untilViewLoad(inputPasswordEditText, extentTest)
 
         driver?.findElementById(inputPasswordEditText)?.sendKeys("123456")
         wait.until(ExpectedConditions.attributeToBeNotEmpty(driver?.findElementById(inputPasswordEditText), "text"))
         extentTest.screenshotInfo(driver!!, "AfterInput", "Auto input password.")
 //        ParseUtil.parseLoginTestLog("Login test log :", extentTest)
 
-        extentTest.log(Status.PASS,"pass")
+        extentTest.log(Status.PASS, "pass")
         driver?.findElementById(loginButton)?.click()
 
     }
@@ -289,8 +308,8 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
         listDrawerPage?.get(6)?.click()
 
         wait.untilViewLoad(remoteApplyButton)
@@ -325,7 +344,7 @@ class WMReportTest: BaseExtentReportTest() {
         extentTest.screenshotInfo(driver!!, "remoteDevice", "Remote control device list page.")
 
 
-        extentTest.log(Status.PASS , "Remote control access success.")
+        extentTest.log(Status.PASS, "Remote control access success.")
 //        } catch (e: Exception) {
 //            extentTest.log(Status.FAIL ,"Some error happened, cause ：\n " +
 //                    "${e.message}")
@@ -343,14 +362,14 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"開啟導覽匣\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
         listDrawerPage?.get(0)?.click()
         Thread.sleep(5000)
         extentTest.screenshotInfo(driver, "backToDashboard", "Back to dash board and waiting five seconds.")
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
         val listDrawerPage2 = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
         listDrawerPage2?.get(5)?.click()
 
@@ -392,34 +411,34 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
         extentTest.screenshotInfo(driver!!, "terminalMainPage", "Terminal Block main page.")
         val terminalBlockData = mutableListOf<TerminalBlockData>()
-        terminalBlockData.insertTerminalData(textDi,diListXpath){
+        terminalBlockData.insertTerminalData(textDi, diListXpath){
             val textName = it.findElement(By.id(itemName)).text
             val textEvent = it.findElement(By.id(itemEvent)).text
             TerminalBlockMember(name = textName, event = textEvent)
         }
 
-        terminalBlockData.insertTerminalData(textDo,doListXpath){
+        terminalBlockData.insertTerminalData(textDo, doListXpath){
             val textName = it.findElement(By.id(itemName)).text
             TerminalBlockMember(name = textName)
         }
 
-        scrollToId(driver!!,relayText)
+        scrollToId(driver!!, relayText)
         wait.untilViewLoad(relayText)
         extentTest.screenshotInfo(driver!!, "relayText", "Scroll to Relay text.")
 
-        terminalBlockData.insertTerminalData(textRelay,relayListXpath){
+        terminalBlockData.insertTerminalData(textRelay, relayListXpath){
             val textName = it.findElement(By.id(itemName)).text
             TerminalBlockMember(name = textName)
         }
 
-        terminalBlockData.insertTerminalData(textAi,aiListXpath){
+        terminalBlockData.insertTerminalData(textAi, aiListXpath){
             val textName = it.findElement(By.id(itemName)).text
             val textStatus = it.findElement(By.id(itemStatus)).text
             TerminalBlockMember(name = textName, status = textStatus)
         }
 
 
-        terminalBlockData.insertTerminalData(textRtd,rtdListXpath){
+        terminalBlockData.insertTerminalData(textRtd, rtdListXpath){
             val textName = it.findElement(By.id(itemName)).text
             val textStatus = it.findElement(By.id(itemStatus)).text
 //            val textSwitch = it.findElement(By.id(itemSwitch)).text
@@ -430,7 +449,7 @@ class WMReportTest: BaseExtentReportTest() {
         ParseUtil.parseDashboardTestLog("Dashboard page log :", extentTest)
 
         extentTest.pass("pass")
-        scrollToId(driver!!,textDi)
+        scrollToId(driver!!, textDi)
         wait.untilViewLoad(textDi)
 
     }
@@ -468,42 +487,43 @@ class WMReportTest: BaseExtentReportTest() {
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
         wait.untilViewLoad(toolbarLogoId)
-//        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+//                wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+//        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
         listDrawerPage?.get(1)?.click()
 
         wait.untilViewLoad(terminalBlockLayout)
         extentTest.screenshotInfo(driver!!, "dashboardIO", "I/O page.")
 
         val terminalBlockData = mutableListOf<TerminalBlockData>()
-        terminalBlockData.insertTerminalData(textDi,diListXpath){
+        terminalBlockData.insertTerminalData(textDi, diListXpath){
             val textName = it.findElement(By.id(itemName)).text
             val textEvent = it.findElement(By.id(itemEvent)).text
             TerminalBlockMember(name = textName, event = textEvent)
         }
 
-        terminalBlockData.insertTerminalData(textDo,doListXpath){
+        terminalBlockData.insertTerminalData(textDo, doListXpath){
             val textName = it.findElement(By.id(itemName)).text
             TerminalBlockMember(name = textName)
         }
 
-        scrollToId(driver!!,relayText)
+        scrollToId(driver!!, relayText)
         wait.untilViewLoad(relayText)
         extentTest.screenshotInfo(driver!!, "relayText", "Scroll to Relay text.")
 
-        terminalBlockData.insertTerminalData(textRelay,relayListXpath){
+        terminalBlockData.insertTerminalData(textRelay, relayListXpath){
             val textName = it.findElement(By.id(itemName)).text
             TerminalBlockMember(name = textName)
         }
 
-        terminalBlockData.insertTerminalData(textAi,aiListXpath){
+        terminalBlockData.insertTerminalData(textAi, aiListXpath){
             val textName = it.findElement(By.id(itemName)).text
             val textStatus = it.findElement(By.id(itemStatus)).text
             TerminalBlockMember(name = textName, status = textStatus)
         }
 
 
-        terminalBlockData.insertTerminalData(textRtd,rtdListXpath){
+        terminalBlockData.insertTerminalData(textRtd, rtdListXpath){
             val textName = it.findElement(By.id(itemName)).text
             val textStatus = it.findElement(By.id(itemStatus)).text
 //            val textSwitch = it.findElement(By.id(itemSwitch)).text
@@ -512,7 +532,7 @@ class WMReportTest: BaseExtentReportTest() {
         extentTest.info("The data on this page is ：")
         extentTest.info(MarkupHelper.createCodeBlock(Gson().toJson(terminalBlockData), CodeLanguage.JSON))
 
-        scrollToId(driver!!,textDi)
+        scrollToId(driver!!, textDi)
         wait.untilViewLoad(textDi)
 //        forceModePage(extentTest)
 
@@ -537,10 +557,10 @@ class WMReportTest: BaseExtentReportTest() {
         driver!!.findElement(By.id(buttonForce)).click()
 
         wait.untilViewLoad(textForce)
-        extentTest.screenshotInfo(driver!!,"forceModePage","Force mode page.")
+        extentTest.screenshotInfo(driver!!, "forceModePage", "Force mode page.")
 
         val textDo = "${targetPackageName}:id/txt_do"
-        scrollToId(driver!!,textDo)
+        scrollToId(driver!!, textDo)
         Thread.sleep(2200)
         wait.untilViewLoad(textDo)
 
@@ -560,7 +580,7 @@ class WMReportTest: BaseExtentReportTest() {
         extentTest.screenshotInfo(driver!!, "clickDO", "After Click DO 0~2")
 
         val textRtd = "${targetPackageName}:id/txt_relay"
-        scrollToId(driver!!,textRtd)
+        scrollToId(driver!!, textRtd)
         wait.untilViewLoad(textRtd)
         extentTest.screenshotInfo(driver!!, "relayTextForce", "Scroll to Relay text.")
 //
@@ -575,7 +595,7 @@ class WMReportTest: BaseExtentReportTest() {
 
         ParseUtil.parseForceModeLog("Force mode log:", extentTest)
         extentTest.log(Status.PASS, "pass.")
-        scrollToId(driver!!,buttonForce)
+        scrollToId(driver!!, buttonForce)
         wait.untilViewLoad(buttonForce)
         driver!!.findElement(By.id(buttonForce)).click()
 
@@ -589,30 +609,32 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilXpath(buttonSetting)
         driver!!.findElement(By.ByXPath(buttonSetting)).click()
 
-        extentTest.screenshotInfo(driver!!, "diConfig", "DI config page.")
+        val testGiven = extentTest.createNode(GherkinKeyword("Given"), "Start DI setting and click enable button")
+        testGiven.screenshotInfo(driver!!, "diConfigPage", "DI config page.")
 
         val switchEnable ="${targetPackageName}:id/swt_enable"
         driver!!.findElement(By.ById(switchEnable)).click()
 
         val buttonClearCount ="${targetPackageName}:id/btn_clearCount"
         wait.untilViewLoad(buttonClearCount)
-        extentTest.screenshotInfo(driver!!, "diClickEnable", "After click enable.")
+        testGiven.screenshotInfo(driver!!, "diClickEnable", "After click enable.")
 
         val switchTrigger ="${targetPackageName}:id/swt_trigger"
         driver!!.findElement(By.ById(switchTrigger)).click()
 
         val textTriggerEvent ="${targetPackageName}:id/txt_trigger_event"
         wait.untilViewLoad(switchTrigger)
-        extentTest.screenshotInfo(driver!!, "clickTrigger", "After click trigger button.")
+        testGiven.screenshotInfo(driver!!, "clickTrigger", "After click trigger button.")
 
         Thread.sleep(3500)
         val buttonApply ="${targetPackageName}:id/btn_apply"
         driver!!.findElement(By.ById(buttonApply)).click()
+        testGiven.info(MarkupHelper.createLabel("After click the apply button and get log message.", ExtentColor.BLUE))
 
+        Thread.sleep(1500)
+        ParseUtil.parseDIPageReqLog("DI page log:", testGiven)
 
-        ParseUtil.parseDIPageLog("DI page log:", extentTest)
-
-        extentTest.log(Status.PASS,"pass.")
+        testGiven.log(Status.PASS, "pass.")
 
 
 
@@ -627,21 +649,22 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilXpath(buttonSetting)
         driver!!.findElement(By.ByXPath(buttonSetting)).click()
 
-        extentTest.screenshotInfo(driver!!, "doConfig", "DO config page.")
+        val testGiven = extentTest.createNode(GherkinKeyword("Given"), "Start DO setting and click enable button")
+        testGiven.screenshotInfo(driver!!, "doConfigPage", "DO config page.")
 
         val switchEnable ="${targetPackageName}:id/swt_enable"
         driver!!.findElement(By.ById(switchEnable)).click()
 
         Thread.sleep(1200)
-        extentTest.screenshotInfo(driver!!, "doClickEnable", "After click enable.")
+        testGiven.screenshotInfo(driver!!, "doClickEnable", "After click enable.")
 
         val buttonApply ="${targetPackageName}:id/btn_apply"
         driver!!.findElement(By.ById(buttonApply)).click()
 
         Thread.sleep(1500)
-        ParseUtil.parseDOPageLog("DO page log:", extentTest)
+        ParseUtil.parseDOPageLog("DO page log:", testGiven)
 
-        extentTest.log(Status.PASS,"pass.")
+        testGiven.log(Status.PASS, "pass.")
 
 
     }
@@ -652,10 +675,11 @@ class WMReportTest: BaseExtentReportTest() {
         val extentTest: ExtentTest = extent!!.createTest("AI")
 
         val relayText = "${targetPackageName}:id/txt_relay"
-        scrollToId(driver!!,relayText)
+        scrollToId(driver!!, relayText)
         wait.untilViewLoad(relayText)
 
         Thread.sleep(3500)
+        val testGiven = extentTest.createNode(GherkinKeyword("Given"), "Start DI setting and click enable button")
 
         val aiTable = "${targetPackageName}:id/ai_table"
 
@@ -663,32 +687,32 @@ class WMReportTest: BaseExtentReportTest() {
         val layout = driver!!.findElements(By.id(aiTable))
         val imageID = "${targetPackageName}:id/img_config"
         layout[0].findElement(By.id(imageID)).click()
-        extentTest.screenshotInfo(driver!!, "aiPage", "AI config page.")
+        testGiven.screenshotInfo(driver!!, "aiPage", "AI config page.")
 
         val switchEnable ="${targetPackageName}:id/swt_enable"
         driver!!.findElement(By.ById(switchEnable)).click()
 
 
 
-        extentTest.screenshotInfo(driver!!, "aiClickEnable", "After Click Enable.")
+        testGiven.screenshotInfo(driver!!, "aiClickEnable", "After Click Enable.")
 
         val switchHighEnable ="${targetPackageName}:id/swt_high_enable"
         val switchLowEnable ="${targetPackageName}:id/swt_low_enable"
-        val editTextLowAlarm ="${targetPackageName}:id/edt_low_alarm"
+        val editTextLowAlarm ="${targetPackageName}:id/swt_low_enable"
         wait.untilViewLoad(switchHighEnable)
         driver!!.findElement(By.ById(switchHighEnable)).click()
         driver!!.findElement(By.ById(switchLowEnable)).click()
         wait.untilViewLoad(editTextLowAlarm)
-        extentTest.screenshotInfo(driver!!, "highLowClickEnable", "After click high and low alarm.")
+        testGiven.screenshotInfo(driver!!, "highLowClickEnable", "After click high and low alarm.")
 
 
         val buttonApply ="${targetPackageName}:id/btn_apply"
-        scrollToId(driver!!,buttonApply)
+        scrollToId(driver!!, buttonApply)
         driver!!.findElement(By.ById(buttonApply)).click()
 
-        ParseUtil.parseAIPageLog("AI page log:", extentTest)
+        ParseUtil.parseAIPageLog("AI page log:", testGiven)
 
-        extentTest.log(Status.PASS,"pass.")
+        testGiven.log(Status.PASS, "pass.")
     }
 
     @Test
@@ -697,8 +721,9 @@ class WMReportTest: BaseExtentReportTest() {
         val extentTest: ExtentTest = extent!!.createTest("RTD")
 
         val relayText = "${targetPackageName}:id/txt_relay"
-        scrollToId(driver!!,relayText)
+        scrollToId(driver!!, relayText)
         wait.untilViewLoad(relayText)
+        val testGiven = extentTest.createNode(GherkinKeyword("Given"), "Start DI setting and click enable button")
 
         Thread.sleep(1500)
         val rtdTable = "${targetPackageName}:id/rtd_table"
@@ -706,14 +731,14 @@ class WMReportTest: BaseExtentReportTest() {
 
         wait.untilViewLoad(rtdTable)
         driver!!.findElements(By.id(rtdTable))[0].findElement(By.id(imageID)).click()
-        extentTest.screenshotInfo(driver!!, "rtdPage", "RTD config page.")
+        testGiven.screenshotInfo(driver!!, "rtdPage", "RTD config page.")
 
         val switchEnable ="${targetPackageName}:id/swt_enable"
         driver!!.findElement(By.ById(switchEnable)).click()
 
 
 
-        extentTest.screenshotInfo(driver!!, "rtdClickEnable", "After click enable.")
+        testGiven.screenshotInfo(driver!!, "rtdClickEnable", "After click enable.")
 
         val editThreshold = "${targetPackageName}:id/edt_threshold"
         val editThresholdXY = "${targetPackageName}:id/edt_threshold_XY"
@@ -734,18 +759,18 @@ class WMReportTest: BaseExtentReportTest() {
         driver!!.findElement(By.ById(switchLowEnable)).click()
 
         val buttonApply ="${targetPackageName}:id/btn_apply"
-        scrollToId(driver!!,buttonApply)
+        scrollToId(driver!!, buttonApply)
 
         wait.untilViewLoad(editTextLowAlarm)
-        extentTest.screenshotInfo(driver!!, "alarmRTDClick", "After click high and low alarm.")
+        testGiven.screenshotInfo(driver!!, "alarmRTDClick", "After click high and low alarm.")
 
         Thread.sleep(2000)
         driver!!.findElement(By.ById(buttonApply)).click()
 
 
-        ParseUtil.parseRTDPageLog("RTD page log:", extentTest)
+        ParseUtil.parseRTDPageLog("RTD page log:", testGiven)
 
-        extentTest.log(Status.PASS,"pass.")
+        testGiven.log(Status.PASS, "pass.")
     }
 
     @Test
@@ -754,23 +779,24 @@ class WMReportTest: BaseExtentReportTest() {
         val extentTest: ExtentTest = extent!!.createTest("RTD_XY")
 
         val relayText = "${targetPackageName}:id/txt_relay"
-        scrollToId(driver!!,relayText)
+        scrollToId(driver!!, relayText)
         wait.untilViewLoad(relayText)
 
         Thread.sleep(1500)
         val rtdTable = "${targetPackageName}:id/rtd_table"
         val imageID = "${targetPackageName}:id/img_config"
+        val testGiven = extentTest.createNode(GherkinKeyword("Given"), "Start DI setting and click enable button")
 
         wait.untilViewLoad(rtdTable)
         driver!!.findElements(By.id(rtdTable))[0].findElement(By.id(imageID)).click()
-        extentTest.screenshotInfo(driver!!, "rtdPage", "RTD config page.")
+        testGiven.screenshotInfo(driver!!, "rtdPage", "RTD config page.")
 
         val switchEnable ="${targetPackageName}:id/swt_enable"
-        driver!!.findElement(By.ById(switchEnable)).click()
+//        driver!!.findElement(By.ById(switchEnable)).click()
 
 
 
-        extentTest.screenshotInfo(driver!!, "rtdClickEnable", "After click enable.")
+        testGiven.screenshotInfo(driver!!, "rtdClickEnable", "After click enable.")
 
         try {
 
@@ -780,14 +806,16 @@ class WMReportTest: BaseExtentReportTest() {
 
             /** error 01*/
             wait.untilViewLoad(editThresholdXY)
+            driver!!.findElement(By.ById(editThreshold)).clear()
             driver!!.findElement(By.ById(editThreshold)).sendKeys("-1")
             Thread.sleep(1000)
+            driver!!.findElement(By.ById(editThresholdXY)).clear()
             driver!!.findElement(By.ById(editThresholdXY)).sendKeys("-1")
             Thread.sleep(1000)
-            extentTest.screenshotInfo(driver!!, "rtuErrorCase1", "Input error value test 01 :")
+            testGiven.screenshotInfo(driver!!, "rtuErrorCase1", "Input error value test 01 :")
             Thread.sleep(1000)
             driver!!.findElement(By.ById(buttonApply)).click()
-            extentTest.screenshotInfo(driver!!, "afterRtuErrorCase1", "After test 01:")
+            testGiven.screenshotInfo(driver!!, "afterRtuErrorCase1", "After test 01:")
             driver!!.findElement(By.ById(editThreshold)).clear()
             driver!!.findElement(By.ById(editThresholdXY)).clear()
             /** error 02*/
@@ -796,10 +824,10 @@ class WMReportTest: BaseExtentReportTest() {
             Thread.sleep(1000)
             driver!!.findElement(By.ById(editThresholdXY)).sendKeys("999")
             Thread.sleep(1000)
-            extentTest.screenshotInfo(driver!!, "rtuErrorCase2", "Input error value test 02 :")
+            testGiven.screenshotInfo(driver!!, "rtuErrorCase2", "Input error value test 02 :")
             Thread.sleep(1000)
             driver!!.findElement(By.ById(buttonApply)).click()
-            extentTest.screenshotInfo(driver!!, "afterRtuErrorCase2", "After test 02:")
+            testGiven.screenshotInfo(driver!!, "afterRtuErrorCase2", "After test 02:")
             driver!!.findElement(By.ById(editThreshold)).clear()
             driver!!.findElement(By.ById(editThresholdXY)).clear()
 
@@ -809,10 +837,10 @@ class WMReportTest: BaseExtentReportTest() {
             Thread.sleep(1000)
             driver!!.findElement(By.ById(editThresholdXY)).sendKeys("")
             Thread.sleep(1000)
-            extentTest.screenshotInfo(driver!!, "rtuErrorCase3", "Input error value test 03:")
+            testGiven.screenshotInfo(driver!!, "rtuErrorCase3", "Input error value test 03:")
             Thread.sleep(1000)
             driver!!.findElement(By.ById(buttonApply)).click()
-            extentTest.screenshotInfo(driver!!, "afterRtuErrorCase3", "After test 03:")
+            testGiven.screenshotInfo(driver!!, "afterRtuErrorCase3", "After test 03:")
             driver!!.findElement(By.ById(editThreshold)).clear()
             driver!!.findElement(By.ById(editThresholdXY)).clear()
 
@@ -822,10 +850,10 @@ class WMReportTest: BaseExtentReportTest() {
             Thread.sleep(1000)
             driver!!.findElement(By.ById(editThresholdXY)).sendKeys("999")
             Thread.sleep(1000)
-            extentTest.screenshotInfo(driver!!, "rtuErrorCase4", "Input error value test 04:")
+            testGiven.screenshotInfo(driver!!, "rtuErrorCase4", "Input error value test 04:")
             Thread.sleep(1000)
             driver!!.findElement(By.ById(buttonApply)).click()
-            extentTest.screenshotInfo(driver!!, "afterRtuErrorCase4", "After test 04:")
+            testGiven.screenshotInfo(driver!!, "afterRtuErrorCase4", "After test 04:")
             driver!!.findElement(By.ById(editThreshold)).clear()
             driver!!.findElement(By.ById(editThresholdXY)).clear()
 
@@ -834,19 +862,19 @@ class WMReportTest: BaseExtentReportTest() {
             Thread.sleep(1000)
             driver!!.findElement(By.ById(editThresholdXY)).sendKeys("12")
             Thread.sleep(1000)
-            extentTest.screenshotInfo(driver!!, "rtuTrueCase", "Input true value test :")
+            testGiven.screenshotInfo(driver!!, "rtuTrueCase", "Input true value test :")
             Thread.sleep(1000)
             driver!!.findElement(By.ById(buttonApply)).click()
 
 
         } catch (e: Exception) {
-            extentTest.log(Status.FAIL,"X Y Value test failed.")
+            testGiven.log(Status.FAIL, "X Y Value test failed.")
 
         }
 
 
 
-        extentTest.log(Status.PASS,"pass.")
+        testGiven.log(Status.PASS, "pass.")
 
 //        val switchHighEnable ="${targetPackageName}:id/swt_high_enable"
 //        val switchLowEnable ="${targetPackageName}:id/swt_low_enable"
@@ -874,10 +902,10 @@ class WMReportTest: BaseExtentReportTest() {
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
 
         wait.untilViewLoad(toolbarLogoId)
-//        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        extentTest.screenshotInfo(driver!!,"bar","After click navigation bar button.")
+//                wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+        extentTest.screenshotInfo(driver!!, "bar", "After click navigation bar button.")
 
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
 //        val listDrawerPage = driver?.findElements(By.id(recyclerViewId))
         mutableListOf<DrawerPageData>().apply {
             val itemText = "${targetPackageName}:id/design_menu_item_text"
@@ -910,14 +938,14 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
         listDrawerPage?.get(3)?.click()
 
 
         wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")))
 
-        extentTest.screenshotInfo(driver!!,"deviceInfoPage","The device info page.")
+        extentTest.screenshotInfo(driver!!, "deviceInfoPage", "The device info page.")
 
         val deviceInfoList = driver!!.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")
 
@@ -933,7 +961,7 @@ class WMReportTest: BaseExtentReportTest() {
         val buttonApply = "${targetPackageName}:id/btn_apply"
 
         wait.untilViewLoad(etCurrentPassword)
-        extentTest.screenshotInfo(driver!!,"resetPWPage","Reset password page.")
+        extentTest.screenshotInfo(driver!!, "resetPWPage", "Reset password page.")
         driver!!.findElement(By.id(etCurrentPassword)).sendKeys("123456")
         driver!!.findElement(By.id(etNewPassword)).sendKeys("999999")
         driver!!.findElement(By.id(etVerifyPassword)).sendKeys("999999")
@@ -975,14 +1003,14 @@ class WMReportTest: BaseExtentReportTest() {
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
 
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
         listDrawerPage?.get(3)?.click()
 
 
         wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")))
 
-        extentTest.screenshotInfo(driver!!,"deviceInfoPage","The device info page.")
+        extentTest.screenshotInfo(driver!!, "deviceInfoPage", "The device info page.")
 
         val deviceInfoList = driver!!.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")
 
@@ -1062,11 +1090,11 @@ class WMReportTest: BaseExtentReportTest() {
 
         driver?.findElementById(inputPasswordEditText)?.sendKeys("999999")
         extentTest.screenshotInfo(driver!!, "AfterInputReset", "Auto input reset password.")
-        wait.untilViewLoad(inputPasswordEditText,extentTest)
+        wait.untilViewLoad(inputPasswordEditText, extentTest)
 
         driver?.findElementById(loginButton)?.click()
         resetPasswordTest()
-        extentTest.log(Status.PASS,"pass")
+        extentTest.log(Status.PASS, "pass")
     }
 
     private fun resetPasswordTest() {
@@ -1076,8 +1104,8 @@ class WMReportTest: BaseExtentReportTest() {
         val terminalBlockLayout = "${targetPackageName}:id/action_bar_root"
         wait.untilViewLoad(terminalBlockLayout)
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
         listDrawerPage?.get(3)?.click()
 
         wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")))
@@ -1116,17 +1144,26 @@ class WMReportTest: BaseExtentReportTest() {
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"開啟導覽匣\"]")?.click()
         /** normal */
 //        driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
         listDrawerPage?.get(2)?.click()
 
+        val testGiven = extentTest.createNode(GherkinKeyword("Given"), "Start Gateway test")
+
+
         wait.untilViewLoad(buttonEnable)
-        extentTest.screenshotInfo(driver!!,"gateWayPage","Gateway page.")
+        testGiven.screenshotInfo(driver!!, "gateWayPage", "Gateway page.")
+        testGiven.pass("pass")
+
+
+        val testGiven2 = extentTest.createNode(GherkinKeyword("Given"), "Start slave request toggle test.")
 
         driver!!.findElement(By.id(buttonEnable)).click()
 
+
+
         wait.untilViewLoad(loEnable)
-        extentTest.screenshotInfo(driver!!,"slaveRequestToggle","Slave Request Toggle page.")
+        testGiven2.screenshotInfo(driver!!, "slaveRequestToggle", "Slave Request Toggle page.")
 
         val listLo = driver!!.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.ListView/android.widget.LinearLayout")
 
@@ -1134,7 +1171,7 @@ class WMReportTest: BaseExtentReportTest() {
             it.findElement(By.id(swRequestControl)).click()
         }
 
-        extentTest.screenshotInfo(driver!!,"afterClickToggle","After click toggle button.")
+        testGiven2.screenshotInfo(driver!!, "afterClickToggle", "After click toggle button.")
         driver!!.findElement(By.id(toggleApply)).click()
 
         wait.untilViewLoad(buttonEnable)
@@ -1143,9 +1180,11 @@ class WMReportTest: BaseExtentReportTest() {
         listLo.forEach {
             it.findElement(By.id(swRequestControl)).click()
         }
-        extentTest.screenshotInfo(driver!!,"ClickAgainToggle","After click toggle again.")
+        testGiven2.screenshotInfo(driver!!, "ClickAgainToggle", "After click toggle again.")
         driver!!.findElement(By.id(toggleApply)).click()
 
+        ParseUtil.parseGateWayTestLog(1, testGiven2)
+        testGiven2.pass("pass")
 
         val buttonRtuConfig = "${targetPackageName}:id/btn_RTU_CONFIG"
         val buttonReqDetailConfig = "${targetPackageName}:id/btn_ReqDetail_CONFIG"
@@ -1153,6 +1192,7 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(buttonEnable)
         driver!!.findElement(By.id(buttonRtuConfig)).click()
 
+        val testGiven3 = extentTest.createNode(GherkinKeyword("Given"), "Start Gateway - Modbus RTU test.")
 
         val spinnerBaudRate = "${targetPackageName}:id/spn_baudRate"
 
@@ -1161,8 +1201,10 @@ class WMReportTest: BaseExtentReportTest() {
         val spinnerParity = "${targetPackageName}:id/spn_parity"
         val editTextTimeout = "${targetPackageName}:id/edt_timeout"
         wait.untilViewLoad(spinnerBaudRate)
-        extentTest.screenshotInfo(driver!!,"ModbusRTU","Modbus RTU Page.")
+        testGiven3.screenshotInfo(driver!!, "ModbusRTU", "Modbus RTU Page.")
 
+        ParseUtil.parseGateWayTestLog(2, testGiven3)
+        testGiven3.pass("pass")
 //        driver!!.findElement(By.id(spinnerBaudRate)).sendKeys("4800")
 //        driver!!.findElement(By.id(spinnerDataBits)).sendKeys("8")
 //        driver!!.findElement(By.id(spinnerStopBits)).sendKeys("2")
@@ -1179,16 +1221,17 @@ class WMReportTest: BaseExtentReportTest() {
         val buttonBack = "${targetPackageName}:id/btn_ReqDetail_CONFIG"
         val textDataType = "${targetPackageName}:id/txt_dataType"
 
+        val testGiven4 = extentTest.createNode(GherkinKeyword("Given"), "Start Gateway - Modbus Slave test.")
+
         wait.untilViewLoad(buttonShowDetail)
-        extentTest.screenshotInfo(driver!!,"ModbusSlave","Modbus Slave Page.")
+        testGiven4.screenshotInfo(driver!!, "ModbusSlave", "Modbus Slave Page.")
         driver!!.findElement(By.id(buttonShowDetail)).click()
         wait.untilViewLoad(textDataType)
-        extentTest.screenshotInfo(driver!!,"ModbusSlaveDetail","Modbus Slave detail page.")
+        testGiven4.screenshotInfo(driver!!, "ModbusSlaveDetail", "Modbus Slave detail page.")
         driver!!.findElement(By.id(buttonBack)).click()
+        ParseUtil.parseGateWayTestLog(3, testGiven4)
+        testGiven4.pass("pass")
 
-
-        ParseUtil.parseGateWayTestLog("Gate way test page lost :" , extentTest)
-        extentTest.pass("pass.")
 
 
     }
@@ -1206,15 +1249,15 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
         listDrawerPage?.get(5)?.click()
 
 
         wait.untilViewLoad(listTable)
 
 
-        extentTest.screenshotInfo(driver!!,"cloudSettingPage","Cloud setting page.")
+        extentTest.screenshotInfo(driver!!, "cloudSettingPage", "Cloud setting page.")
 
         val deviceInfoList = driver!!.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")
 
@@ -1249,7 +1292,7 @@ class WMReportTest: BaseExtentReportTest() {
         driver!!.findElement(By.id(changeApply)).click()
 
         wait.untilViewLoad(listTable)
-        extentTest.screenshotInfo(driver!!,"cloudSettingPage","After Cloud setting edited.")
+        extentTest.screenshotInfo(driver!!, "cloudSettingPage", "After Cloud setting edited.")
 
         extentTest.info("After cloud setting edited ：")
 //        deviceInfoList.forEach {
@@ -1273,15 +1316,15 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
         listDrawerPage?.get(5)?.click()
 
 
         wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[1]/android.widget.ListView/android.widget.LinearLayout[6]")))
 
 
-        extentTest.screenshotInfo(driver!!,"cloudSettingLTE","Cloud setting page.")
+        extentTest.screenshotInfo(driver!!, "cloudSettingLTE", "Cloud setting page.")
 
 
         val editTextBrokerAddress = "${targetPackageName}:id/edt_brokerAddress"
@@ -1311,10 +1354,10 @@ class WMReportTest: BaseExtentReportTest() {
         driver!!.findElement(By.id(changeApply)).click()
 
         wait.untilViewLoad(listTable)
-        extentTest.screenshotInfo(driver!!,"cloudSettingEdited","After Cloud setting edited.")
+        extentTest.screenshotInfo(driver!!, "cloudSettingEdited", "After Cloud setting edited.")
 
         val loginLTE = "${targetPackageName}:id/btn_get_ApiKEY"
-        driver!!.findElement(By.id( loginLTE)).click()
+        driver!!.findElement(By.id(loginLTE)).click()
 
         val orgNameXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[3]/android.view.View[3]/android.view.View[1]/android.view.View[2]/android.widget.EditText"
         val emailXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[3]/android.view.View[3]/android.view.View[2]/android.view.View[2]/android.widget.EditText"
@@ -1335,7 +1378,7 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(buttonEdit)
         backTODashboardWaiting(extentTest)
         wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[1]/android.widget.ListView/android.widget.LinearLayout[6]")))
-        extentTest.screenshotInfo(driver!!,"remoteControlLogin","After Login.")
+        extentTest.screenshotInfo(driver!!, "remoteControlLogin", "After Login.")
 
 //        ParseUtil.parseCloudSettingTestLog("Cloud setting log :", extentTest)
 
@@ -1355,12 +1398,12 @@ class WMReportTest: BaseExtentReportTest() {
         wait.untilViewLoad(terminalBlockLayout)
 
         driver?.findElementByXPath("//android.widget.ImageButton[@content-desc=\"Open navigation drawer\"]")?.click()
-        wait.until(ExpectedConditions.presenceOfElementLocated(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")))
-        val listDrawerPage = driver?.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat")
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.oringnet.wm:id/design_menu_item_text")))
+        val listDrawerPage = driver?.findElements(By.id("com.oringnet.wm:id/design_menu_item_text"))
         listDrawerPage?.get(4)?.click()
 
         wait.until(ExpectedConditions.elementToBeClickable(MobileBy.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout[5]")))
-        extentTest.screenshotInfo(driver!!,"networkStatusPage","Network status page.")
+        extentTest.screenshotInfo(driver!!, "networkStatusPage", "Network status page.")
 
         val networkStatusList = driver!!.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.view.ViewGroup/android.view.ViewGroup/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.ListView/android.widget.LinearLayout")
 
@@ -1382,13 +1425,13 @@ class WMReportTest: BaseExtentReportTest() {
         driver!!.findElement(By.id(changeApply)).click()
         try {
             wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id(listTable)))
-            extentTest.screenshotInfo(driver!!,"afterNetworkStatus","After network status edited.")
+            extentTest.screenshotInfo(driver!!, "afterNetworkStatus", "After network status edited.")
             extentTest.info("After network status edited ：")
             networkStatusList.forEach {
                 extentTest.info("${it.findElement(By.id(textName)).text}： ${it.findElement(By.id(textInfo)).text}")
             }
         } catch (e: Exception) {
-            extentTest.log(Status.WARNING,"Apply button not work.")
+            extentTest.log(Status.WARNING, "Apply button not work.")
             driver!!.findElement(By.id(changeCancel)).click()
 
         }

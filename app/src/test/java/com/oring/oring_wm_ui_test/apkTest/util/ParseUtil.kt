@@ -5,6 +5,7 @@ import com.aventstack.extentreports.Status
 import com.aventstack.extentreports.markuputils.MarkupHelper
 import com.google.gson.Gson
 import com.oring.oring_wm_ui_test.apkTest.constants.LogName
+import com.oring.oring_wm_ui_test.apkTest.constants.SubLogName
 import com.oring.oring_wm_ui_test.apkTest.model.LogCatchModel
 import java.io.BufferedReader
 import java.io.File
@@ -124,9 +125,8 @@ object ParseUtil {
     }
 
 
-    fun parseDOPageLog(targetName: String, extentTest: ExtentTest) {
+    fun parseDOPageLog(targetName: String, node: ExtentTest) {
 
-        val node = extentTest.createNode(targetName)
         val targetList = mutableListOf<String>()
 
         parseLogName {
@@ -141,9 +141,10 @@ object ParseUtil {
 
     }
 
-    fun parseDIPageLog(targetName: String, extentTest: ExtentTest) {
 
-        val node = extentTest.createNode(targetName)
+    fun parseDIPageReqLog(targetName: String, node: ExtentTest) {
+
+//        val node = extentTest.createNode(targetName)
         val targetList = mutableListOf<String>()
 
         parseLogName {
@@ -159,9 +160,8 @@ object ParseUtil {
     }
 
 
-    fun parseAIPageLog(targetName: String, extentTest: ExtentTest) {
+    fun parseAIPageLog(targetName: String, node: ExtentTest) {
 
-        val node = extentTest.createNode(targetName)
         val targetList = mutableListOf<String>()
 
         parseLogName {
@@ -176,9 +176,8 @@ object ParseUtil {
 
     }
 
-    fun parseRTDPageLog(targetName: String, extentTest: ExtentTest) {
+    fun parseRTDPageLog(targetName: String, node: ExtentTest) {
 
-        val node = extentTest.createNode(targetName)
         val targetList = mutableListOf<String>()
 
         parseLogName {
@@ -253,15 +252,63 @@ object ParseUtil {
 
 
 
-    fun parseGateWayTestLog(targetName: String, extentTest: ExtentTest){
+    fun parseGateWayTestLog(type: Int, node: ExtentTest){
 
-        val node = extentTest.createNode(targetName)
         val targetList = mutableListOf<String>()
 
+        Thread.sleep(1500)
         parseLogName {
-            if (it.logName != null && it.logName!!.contains(LogName.Gateway)) {
-                targetList.add(replaceLogTag(it.totalMessage!!))
+//            if (it.logName != null && it.logName!!.contains(LogName.Gateway)) {
+//
+//            }
+
+            when (type) {
+                1 -> {
+                    if (it.totalMessage!!.contains(SubLogName.GATEWAY_READ_ENABLE_HIGH) ||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_ENABLE_LOW) ||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_ENABLE_HIGH) ||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_ENABLE_LOW)) {
+                        targetList.add(replaceLogTag(it.totalMessage!!))
+                    }
+                }
+
+                2->{
+                    if ( it.totalMessage!!.contains(SubLogName.GATEWAY_READ_BAUD_RATE)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_DATA_BITS)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_PARITY)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_STOP_BITS)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_TIMEOUT)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_BAUD_RATE)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_DATA_BITS)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_PARITY)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_STOP_BITS)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_TIMEOUT)){
+                        targetList.add(replaceLogTag(it.totalMessage!!))
+                    }
+                }
+                3->{
+                    if (
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_INTERVAL)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_DATA_FORMAT)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_NET_ID)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_IO_TYPE)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_ADDRESS)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_READ_DATA_NUM)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_NET_ID)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_IO_TYPE)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_ADDRESS)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_DATA_NUM)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_DATA_FORMAT)||
+                            it.totalMessage!!.contains(SubLogName.GATEWAY_WRITE_STOP_INTERVAL)){
+                        targetList.add(replaceLogTag(it.totalMessage!!))
+
+                    }
+
+
+
+                }
             }
+
         }
         node.info(MarkupHelper.createOrderedList(targetList))
 
